@@ -1,4 +1,4 @@
 ht-bib
 ======
 
-HELLO!
+Python interface for the HathiTrust Bibliography API. 
