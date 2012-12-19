@@ -46,7 +46,7 @@ class HTBib(object):
 
     def single_bib_request(self, id_type, id_value, full=False):
 
-        url = self._bib_url(id_type, id_value, full)
+        url = self._bib_url_single(id_type, id_value, full)
         r = urllib2.urlopen(url)
         return json.load(r)
 
@@ -54,7 +54,7 @@ class HTBib(object):
 if __name__ == "__main__":
     
     bquery = HTBib()
-    js = bquery.bib_request('htid', 'mdp.39015012849165', full=True)
+    js = bquery.single_bib_request('htid', 'mdp.39015012849165', full=True)
     print json.dumps(js, indent=2)
     print js['records'].keys()
 
