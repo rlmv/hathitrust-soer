@@ -2,12 +2,11 @@
 __author__ = 'robertmarchman'
 
 import requests
-import json
+import json   
 
 from constants import BIB_BASEURL
 
 class HTBibInterface(object):
-
 
     def _multi_id_url(self, id_dictionary, full=False, return_type='json'):
         """ 
@@ -44,7 +43,7 @@ class HTBibInterface(object):
         :param id_value: identifier of type id_type
         :param full: toggles full/brief - MARCXML
 
-        Note that this method uses the multi_record method, however the
+        Note that this method calls the multi_record method, however the
         returned results are formatted as specified in the single record section of the API.
         """
 
@@ -61,19 +60,20 @@ class HTBibInterface(object):
         Returns records for the requests in id_dictionary. To conform to the HathiTrust
         API, the size of id_dictionary should be limited to 20.
 
-        :param id_dictionary: an iterable of dictionary entries, with the id value (string) keyed by
+        :param id_dictionary: an iterable of dictionaries, with the id value (string) keyed by
         the id type (can be int or string). Eg:
             ids = [{id:1, oclc:45678}, {lccn:70628581}]
         See the HathiTrust bib API documentation for more details, and information
-        on the id:MyID tag. 
+        on the id:MyID persistant identifier tag.
 
         :param full: specifes full/brief detail -- full includes MARCXML fields.
 
         """
 
         req_url = self._multi_id_url(id_dictionary, full=full)
-        r = requests.get(req_url)
 
+        r = requests.get(req_url)
+        r.raise_for_status()
         return r.json()
 
 
