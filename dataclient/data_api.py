@@ -10,9 +10,6 @@ import xml.etree.ElementTree as ET
 from requests_oauthlib import OAuth1
 from constants import DATA_BASEURL, SECURE_DATA_BASEURL
 
-# edit oauth_keys.py with your own key
-from oauth_keys import client_key, client_secret
-
 
 class HTDataInterface(object):
 
@@ -20,13 +17,14 @@ class HTDataInterface(object):
         """ Initialize a HTDataInterface object.
 
         Args:
-            client_key: OAuth client client key
+            client_key: OAuth client key (registered with HathiTrust)
             client_secret: secret OAuth key
             secure: toggles http/https session. Defaults to
                  http, use https for access to restricted content.
 
         Initializes a persistent Requests session and attaches 
-        OAuth credentials to the session.
+        OAuth credentials to the session. All queries are performed as 
+        method calls on the HTDataInterface object.
 
         """
 
@@ -157,33 +155,6 @@ class HTDataInterface(object):
         """
         return self._make_request('pagecoordocr', doc_id, sequence=sequence)
 
-
-
-if __name__ == "__main__":
-
-    url = u'https://babel.hathitrust.org/cgi/htd/meta/miun.abr0732.0001.001/2?v=1'
-
-    
-
-    # queryoauth = OAuth1(client_key=client_key, client_secret=client_secret, signature_type='query')
-    # r = requests.get(turl, auth=queryoauth)
-
-    # print r.text
-
-    diface = HTDataInterface(client_key, client_secret, secure=False)
-    # js = diface.make_request(url).json()
-    # print json.dumps(js, indent=4)
-    # response = diface._make_request('meta', 'miun.abr0732.0001.001', v=1, json=True)
-    response = diface.get_structure('mdp.39015000000128')
-    print response.url
-   
-
-    with open('temp', 'wb') as f:
-        f.write(response.content) 
-
-    print 'DONE'
-
-  
    
 
 
