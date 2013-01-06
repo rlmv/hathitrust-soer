@@ -10,18 +10,23 @@ import xml.etree.ElementTree as ET
 from requests_oauthlib import OAuth1
 from constants import DATA_BASEURL, SECURE_DATA_BASEURL
 
+# edit oauth_keys.py with your own key
+from oauth_keys import client_key, client_secret
+
 
 class HTDataInterface(object):
 
     def __init__(self, client_key, client_secret, secure=False):
-        """
-        Initialize a HTDataInterface object.
+        """ Initialize a HTDataInterface object.
 
         Args:
             client_key: OAuth client client key
             client_secret: secret OAuth key
             secure: toggles http/https session. Defaults to
                  http, use https for access to restricted content.
+
+        Initializes a persistent Requests session and attaches 
+        OAuth credentials to the session.
 
         """
 
@@ -31,8 +36,6 @@ class HTDataInterface(object):
                             client_secret=client_secret, 
                             signature_type='query')
 
-        # initialize persistent Requests session and 
-        # attach OAuth credentials to it
         self.rsession = requests.Session()
         self.rsession.auth = self.oauth
 
@@ -44,8 +47,7 @@ class HTDataInterface(object):
 
     def _make_request(self, resource, doc_id, sequence=None, 
                         v=1, json=False, callback=None):
-        """
-        Construct and perform URI request.
+        """ Construct and perform URI request.
 
         Args:
             resource: resource type
@@ -71,14 +73,12 @@ class HTDataInterface(object):
         if sequence:
             url += '/' + str(sequence)
 
-        # construct optional parameter dictionary
         params = {'v': str(v)}
         if json:
             params['alt'] = 'json'
             if callback:
                 params['callback'] = callback
 
-        # perform request and raise errors
         r = self.rsession.get(url, params=params)
         r.raise_for_status()
 
@@ -86,8 +86,7 @@ class HTDataInterface(object):
 
 
     def get_meta(self, doc_id, json=False):
-        """
-        Retrieve Volume and Rights Metadata resources.
+        """ Retrieve Volume and Rights Metadata resources.
 
         Args:
             doc_id: document identifier
@@ -95,7 +94,7 @@ class HTDataInterface(object):
                 the resource is returned, otherwise efaults to an atom+xml 
                 format.
 
-        Returns: 
+        Return: 
             ...
 
         """
@@ -103,13 +102,12 @@ class HTDataInterface(object):
 
 
     def get_structure(self, doc_id, json=False):
-        """ 
-        Retrieve a METS document.
+        """ Retrieve a METS document.
 
         Args:
             doc_id: target document
             json: toggles json/xml 
-        Returns:
+        Return:
             xml or json string
 
         """
@@ -118,21 +116,46 @@ class HTDataInterface(object):
 
     def get_pagemeta(self, doc_id, seq, json=False):
         """ Retrieve single page metadata. """
-
         return self._make_request('pagemeta', doc_id, sequence=seq, json=json)
 
 
     def get_aggregate(self, doc_id):
+        """ Return aggregate record data. 
+
+        Return: 
+            zip content that contains tiff/jp2/jpeg, .txt OCR files,
+                + Source METS (not the same as Hathi METS)
+
+        """
         return self._make_request('aggregate', doc_id)
 
-    def get_pageimage(self):
-        pass
 
-    def get_pageocr(self):
-        pass
+    def get_pageimage(self, doc_id, seq):
+        """ Retrieve Single Page Image.
 
-    def get_pagecoordocr(self):
-        pass
+        Return:
+            response with tiff, jp2, or jpeg file
+
+        """
+        return self._make_request('pageimage', doc_id, sequence=seq)
+
+
+    def get_pageocr(self, doc_id, sequence):
+        """ 
+        Return:
+            UTF-8 encoded OCR plain text
+
+        """
+        return self._make_request('pageimage', doc_id, sequence=sequence)
+
+
+    def get_pagecoordocr(self, doc_id, sequence):
+        """
+        Return:
+            UTF-8 encoded XML OCR
+
+        """
+        return self._make_request('pagecoordocr', doc_id, sequence=sequence)
 
 
 
@@ -140,8 +163,7 @@ if __name__ == "__main__":
 
     url = u'https://babel.hathitrust.org/cgi/htd/meta/miun.abr0732.0001.001/2?v=1'
 
-    client_key = u'd4b43a0b2e'
-    client_secret= u'f53b0161addebb83d1baf03f7b69'
+    
 
     # queryoauth = OAuth1(client_key=client_key, client_secret=client_secret, signature_type='query')
     # r = requests.get(turl, auth=queryoauth)
@@ -152,10 +174,12 @@ if __name__ == "__main__":
     # js = diface.make_request(url).json()
     # print json.dumps(js, indent=4)
     # response = diface._make_request('meta', 'miun.abr0732.0001.001', v=1, json=True)
-    response = diface.get_aggregate('miun.abr0732.0001.001')
+    response = diface.get_structure('mdp.39015000000128')
+    print response.url
+   
 
-    with open('temp.zip', 'wb') as f:
-        f.write(response.content)
+    with open('temp', 'wb') as f:
+        f.write(response.content) 
 
     print 'DONE'
 
