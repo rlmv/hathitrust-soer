@@ -3,15 +3,12 @@
 __author__ = 'robertmarchman'
 
 import requests
-import json
-import xml.etree.ElementTree as ET
-
-
 from requests_oauthlib import OAuth1
+
 from constants import DATA_BASEURL, SECURE_DATA_BASEURL
 
 
-class HTDataInterface(object):
+class HTDataClient(object):
 
     def __init__(self, client_key, client_secret, secure=False):
         """ Initialize a HTDataInterface object.
@@ -25,6 +22,9 @@ class HTDataInterface(object):
         Initializes a persistent Requests session and attaches 
         OAuth credentials to the session. All queries are performed as 
         method calls on the HTDataInterface object.
+
+        For now, all queries return the raw content string, rather than
+        processing the json or xml structures.
 
         """
 
@@ -43,7 +43,7 @@ class HTDataInterface(object):
             self.baseurl = DATA_BASEURL
 
 
-    def _make_request(self, resource, doc_id, sequence=None, 
+    def _makerequest(self, resource, doc_id, sequence=None, 
                         v=1, json=False, callback=None):
         """ Construct and perform URI request.
 
@@ -58,11 +58,14 @@ class HTDataInterface(object):
             callback: optional javascript callback function, 
                 which only has an effect if json=True.
 
-        Returns: 
-            requests response object
+        Return: 
+            content of the response, in bytes
 
         Note there's not much error checking on url construction, 
-        but errors do get raised after badly formed requests.
+        but errors do get raised after badly formed requests. 
+        To do: implement some exception checking here, and identify 
+        what sort of errors are being returned (eg. BadRequest, 
+        Unauthorized, NotFound, etc.)
 
         """
 
@@ -80,10 +83,10 @@ class HTDataInterface(object):
         r = self.rsession.get(url, params=params)
         r.raise_for_status()
 
-        return r
+        return r.content
 
 
-    def get_meta(self, doc_id, json=False):
+    def getmeta(self, doc_id, json=False):
         """ Retrieve Volume and Rights Metadata resources.
 
         Args:
@@ -93,13 +96,13 @@ class HTDataInterface(object):
                 format.
 
         Return: 
-            ...
+            xml or json string
 
         """
-        return self._make_request('meta', doc_id, json=json)
+        return self._makerequest('meta', doc_id, json=json)
 
 
-    def get_structure(self, doc_id, json=False):
+    def getstructure(self, doc_id, json=False):
         """ Retrieve a METS document.
 
         Args:
@@ -109,51 +112,53 @@ class HTDataInterface(object):
             xml or json string
 
         """
-        return self._make_request('structure', doc_id, json=json)
+        return self._makerequest('structure', doc_id, json=json)
 
 
-    def get_pagemeta(self, doc_id, seq, json=False):
+    def getpagemeta(self, doc_id, seq, json=False):
         """ Retrieve single page metadata. """
-        return self._make_request('pagemeta', doc_id, sequence=seq, json=json)
+        return self._makerequest('pagemeta', doc_id, sequence=seq, json=json)
 
 
-    def get_aggregate(self, doc_id):
-        """ Return aggregate record data. 
+    def getaggregate(self, doc_id):
+        """ Get aggregate record data. 
 
         Return: 
             zip content that contains tiff/jp2/jpeg, .txt OCR files,
                 + Source METS (not the same as Hathi METS)
 
         """
-        return self._make_request('aggregate', doc_id)
+        return self._makerequest('aggregate', doc_id)
 
 
-    def get_pageimage(self, doc_id, seq):
+    def getpageimage(self, doc_id, seq):
         """ Retrieve Single Page Image.
 
         Return:
             response with tiff, jp2, or jpeg file
 
         """
-        return self._make_request('pageimage', doc_id, sequence=seq)
+        return self._makerequest('pageimage', doc_id, sequence=seq)
 
 
-    def get_pageocr(self, doc_id, sequence):
-        """ 
+    def getpageocr(self, doc_id, sequence):
+        """  Get single-page OCR.
+
         Return:
             UTF-8 encoded OCR plain text
 
         """
-        return self._make_request('pageimage', doc_id, sequence=sequence)
+        return self._makerequest('pageimage', doc_id, sequence=sequence)
 
 
-    def get_pagecoordocr(self, doc_id, sequence):
-        """
+    def getpagecoordocr(self, doc_id, sequence):
+        """ Get single-page coordinate OCR.
+
         Return:
             UTF-8 encoded XML OCR
 
         """
-        return self._make_request('pagecoordocr', doc_id, sequence=sequence)
+        return self._makerequest('pagecoordocr', doc_id, sequence=sequence)
 
    
 
