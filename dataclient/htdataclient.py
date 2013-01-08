@@ -65,7 +65,7 @@ class HTDataClient(object):
         but errors do get raised after badly formed requests. 
         To do: implement some exception checking here, and identify 
         what sort of errors are being returned (eg. BadRequest, 
-        Unauthorized, NotFound, etc.)
+        Unauthorized, NotFound, etc.)   
 
         """
 
