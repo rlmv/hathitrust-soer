@@ -29,9 +29,9 @@ class HTBibClient(object):
         else:
             detail = 'full'
 
-        search_string = "|".join(";".join(key + ":" + str(spec[key]) 
-            for key in spec) for spec in id_dictionary)
-        url = "".join(BIB_BASEURL, detail, '/', return_type, '/', search_string)
+        search_string = "|".join([";".join(key + ":" + str(spec[key]) 
+            for key in spec) for spec in id_dictionary])
+        url = "".join([BIB_BASEURL, detail, '/', return_type, '/', search_string])
 
         return url
 
