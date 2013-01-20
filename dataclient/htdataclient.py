@@ -148,7 +148,7 @@ class HTDataClient(object):
             UTF-8 encoded OCR plain text
 
         """
-        return self._makerequest('pageimage', doc_id, sequence=sequence)
+        return self._makerequest('pageocr', doc_id, sequence=sequence)
 
 
     def getpagecoordocr(self, doc_id, sequence):
