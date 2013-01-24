@@ -104,6 +104,13 @@ def getnumfound(querystring):
     return int(query(querystring, rows=0, json=True)['response']['numFound'])
 
 
+def getallids(querystring):
+    """ Return an generator over all the document ids that
+        match querystring."""
+    for doc in iterquery(querystring, fields=['id']):
+        yield doc['id']
+
+
 def getmarc():
     base = "http://chinkapin.pti.indiana.edu:9994/solr/MARC/?volumeIDs="
 
@@ -119,72 +126,6 @@ def getmarc():
         f.write(r.content)
 
 
-#s = "author : marchm*"
-#print getnumfound(query(s, json=True))
-##print json.dumps(query(s, json=True), indent=4)
-#for i,doc in enumerate(iterquery(s, rows=10, fields = ['id'])):
-#    print i+1
-#    print json.dumps(doc)
 
 
 
-#querystring = 'title: new zealand'
-##q = query(querystring, rows=100, fields=['title', 'htsource'], json=True)
-#
-## docs = q['response']['docs']
-## for doc in docs:
-#
-#
-#print "{} public domain records found.".format(getnumfound(q))
-#
-## ids = parseIDs(q)
-## for id in ids:
-##     print id
-#
-##print getnumfound(q)
-#print json.dumps(q, indent=4)
-#
-#getallIDs(querystring, 'test.txt')
-
-
-if __name__ == "__main__":
-    
-    """ Implements a command line tool that performs queries against
-        the HTRC Solr Proxy."""
-    
-    parser = argparse.ArgumentParser(
-                        description="This is a command line tool for the HTRC Solr Proxy.")
-    parser.add_argument('querystring', metavar='QUERY',
-                        help='a Solr query string')
-    parser.add_argument('--fields', metavar='FIELD', nargs='*',
-                        help='fields to include with the results')
-    parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'),
-                        help='file to write the output to')
-    parser.add_argument('-n', '--numfound', action='store_true',
-                        help='output the total number of results found by this query')
-    # arguments to implement:   marc retriever - exclusive from --fields and -n
-    #                           xml option
-    #                           max - specify a maximum number of results to retrieve.
-    #                           pretty - pretty output
-    args = parser.parse_args()
-    print args
-    
-    ## We need a try-except block around this to catch HTTP errors. 
-    
-    if args.numfound:
-        numfound = getnumfound(args.querystring)
-        args.outfile.write("{}\n".format(numfound))
-    # elif marc:
-    #       ...
-    # regular query:
-    else: 
-        for doc in iterquery(args.querystring, fields=args.fields):
-            # lets format this so the output is readable
-            pretty = json.dumps(doc, indent=4)
-            args.outfile.write("{}\n".format(pretty))   
-            
-            
-    # this is kind of bad - argparse doesn't open the filein a context
-    # manager, so we need some try finally work to make sure this closes
-    args.outfile.close()
-    
