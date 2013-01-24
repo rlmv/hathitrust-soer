@@ -7,7 +7,7 @@ import argparse
 from solr.solrproxy import iterquery, getnumfound, getallids
 
 
-if __name__ == "__main__":
+def main(argv):
     
     """ Implements a command line tool that performs queries against
         the HTRC Solr Proxy."""
@@ -19,11 +19,11 @@ if __name__ == "__main__":
     parser.add_argument('--fields', metavar='FIELD', nargs='*',
                         help='fields to include with the results')
     parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'),
-                        help='file to write the output to')
+                        help='write output to this file')
     parser.add_argument('-n', '--numfound', action='store_true',
-                        help='output the total number of results found by this query')
+                        help='list the total number of results returned by this query')
     parser.add_argument('-i', '--ids', action='store_true',
-                        help='only output the document ids')
+                        help='output a stream of document ids')
     
     # arguments to implement:   marc retriever - exclusive from --fields and -n
     #                           xml option
@@ -32,33 +32,45 @@ if __name__ == "__main__":
     # deal with mutually exclusive blocks.
     
     
-    args = parser.parse_args()
+    args = parser.parse_args(argv[1:])
+    outfile = args.outfile
     
     try: 
-        print args
-        
         if args.numfound:
             numfound = getnumfound(args.querystring)
-            args.outfile.write("{}\n".format(numfound))
+            outfile.write("{}\n".format(numfound))
         
         elif args.ids:
             for doc_id in getallids(args.querystring):
-                args.outfile.write("{}\n".format(doc_id))
+                outfile.write("{}\n".format(doc_id))
                 
         # elif marc:
         #       ...
         # regular query:
         # do these results need to be wrapped in a dict or list?
-        else: 
-            for doc in iterquery(args.querystring, fields=args.fields):
+        else:
+            _first = True # need to wrangle with the formatting...
+            outfile.write('{ "results" : [\n')
+            
+            for doc in iterquery(args.querystring, fields=args.fields):    
+                if _first:
+                    _first = not _first
+                else:
+                    outfile.write(",\n")
+                
                 # lets format this so the output is readable
                 pretty = json.dumps(doc, indent=4)
-                args.outfile.write("{}\n".format(pretty))
+                outfile.write("{}".format(pretty))
                 
+            outfile.write('\n]}')
+            
     ## We need to catch HTTP errors here.
                 
     finally:
-        if args.outfile is not sys.stdout:
-            args.outfile.close()
+        if outfile is not sys.stdout:
+            outfile.close()
 
-    
+
+
+if __name__ == "__main__":
+    main(sys.argv)
