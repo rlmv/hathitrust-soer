@@ -1,4 +1,4 @@
-
+#! /usr/local/bin/python
 
 import sys
 import json
@@ -11,6 +11,9 @@ def main(argv):
     
     """ Implements a command line tool that performs queries against
         the HTRC Solr Proxy."""
+    
+    # can we make it so that the querystring is input without surrounding
+    # quotation marks?
     
     parser = argparse.ArgumentParser(
                         description="This is a command line tool for the HTRC Solr Proxy.")
@@ -42,8 +45,7 @@ def main(argv):
         
         elif args.ids:
             for doc_id in getallids(args.querystring):
-                outfile.write("{}\n".format(doc_id))
-                
+                outfile.write("{}\n".format(doc_id))     
         # elif marc:
         #       ...
         # regular query:
@@ -65,6 +67,8 @@ def main(argv):
             outfile.write('\n]}')
             
     ## We need to catch HTTP errors here.
+    except KeyboardInterrupt:
+        sys.exit()
                 
     finally:
         if outfile is not sys.stdout:

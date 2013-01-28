@@ -9,12 +9,17 @@ try:
 except ImportError:
     import xml.etree.cElementTree as etree
     
-
+# TODO: quoting in the querystring needs some help -
+# things need to be simplified - right now you can only
+# use "" marks inside the querystring - write a function
+# that runs through and does a replace on them.
 
 SOLR_HOST = "http://chinkapin.pti.indiana.edu"
 SOLR_PORT = 9994
-SOLR_STUB = "/solr/select/"
-solrbaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), SOLR_STUB])
+QUERY_STUB = "/solr/select/"
+MARC_STUB = "/solr/MARC/"
+querybaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), QUERY_STUB])
+marcbaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), MARC_STUB])
 
 
 def query(querystring, rows=10, start=0, fields=[], json=True):
@@ -41,7 +46,7 @@ def query(querystring, rows=10, start=0, fields=[], json=True):
     if fields:
         terms['fl'] = ','.join(fields)
 
-    r = requests.get(solrbaseurl, params=terms)
+    r = requests.get(querybaseurl, params=terms)
     r.raise_for_status()
 
     if json:
@@ -111,21 +116,21 @@ def getallids(querystring):
         yield doc['id']
 
 
-def getmarc():
-    base = "http://chinkapin.pti.indiana.edu:9994/solr/MARC/?volumeIDs="
-
-    ids = ['mdp.39015062319309', 'mdp.39015026997125', 'uc1.31822021576848']
-    idstring = "|".join(volid for volid in ids)
+def getmarc(ids):
+    """ Retrieves MARC data from the Solr server.
+        Returns zip content. """
+      
+    idstring = "|".join(doc_id for doc_id in ids)
+    params = {"volumeIDs" : idstring}
     
-    url = base + idstring
-    print url
-    r = requests.get(url)
+    r = requests.get(marcbaseurl, params=params)
     r.raise_for_status()
     
-    with open('marc.zip', 'wb') as f:
-        f.write(r.content)
+    return r.content
+    
 
 
-
-
+if __name__ == "__main__":
+      ids = ['mdp.39015062319309', 'mdp.39015026997125', 'uc1.31822021576848']
+      print getmarc(ids)
 
