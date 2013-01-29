@@ -109,6 +109,10 @@ def main(argv):
     finally:
         if outfile is not sys.stdout:
             outfile.close()
+        try:
+            args.marc.close()
+        except AttributeError:
+            pass
 
 
 

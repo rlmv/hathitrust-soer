@@ -3,8 +3,10 @@ import sys
 import json
 import argparse
 import zipfile
+from string import replace
 
 import requests
+
 try:
     from lxml import etree
 except ImportError:
@@ -22,6 +24,17 @@ MARC_STUB = "/solr/MARC/"
 querybaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), QUERY_STUB])
 marcbaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), MARC_STUB])
 
+def _cleanquery(querystring):
+    """ Cleans up the query - replaces internal
+    single quotation marks with double quotes, so
+    Solr produces correct results.
+    
+    Solr is sensitive to the difference between ' and " -
+    it will regard terms surrounded with '...' as separate
+    queryterms, but "..." as a single concatenated phrase.
+    """
+    return replace(querystring, '\'', '\"')
+    
 def query(querystring, rows=10, start=0, fields=[], json=True):
     """
     Arguments:
@@ -34,6 +47,8 @@ def query(querystring, rows=10, start=0, fields=[], json=True):
     Return:
         JSON resource, or lxml etree.
     """
+    querystring = _cleanquery(querystring)
+    
     terms = {}
     terms['q'] = querystring
     terms['rows'] = rows
@@ -96,7 +111,6 @@ def iterquery(querystring, rows=10, fields=[]):
             yield doc
 
 
-
 def jsonquery():
     pass
 
@@ -130,12 +144,12 @@ def getmarc(ids):
 
 
 if __name__ == "__main__":
-      ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']
-      with open('pairtest.zip', 'w') as f:
-        f.write(getmarc(ids))
-        f.write(getmarc(['mdp.39015062319309']))
-      #with zipfile.ZipFile('marc.zip', 'w') as z:
-      #  z.writestr('marc', getmarc(['mdp.39015062319309']))
-      #  z.writestr('marc', getmarc(ids))
-      #  
-
+      #ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']
+      #with open('pairtest.zip', 'w') as f:
+      #  f.write(getmarc(ids))
+      #  f.write(getmarc(['mdp.39015062319309']))
+      ##with zipfile.ZipFile('marc.zip', 'w') as z:
+      ##  z.writestr('marc', getmarc(['mdp.39015062319309']))
+      ##  z.writestr('marc', getmarc(ids))
+      ##  
+    print _cleanquery("author : 'new zealand'")
