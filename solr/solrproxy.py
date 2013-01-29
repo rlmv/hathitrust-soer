@@ -102,18 +102,65 @@ def iterquery(querystring, rows=10, fields=[]):
             
             yield doc
 
+def batchquery(querystring, size=10, fields=[]):
+    """ Returns a generator over batches of query results.
+    
+    Yields an iterable of len [size] with each next() call.
+    """
+    
+    num_retrieved = 0
+    new_iter = True
+    num_found = None
+    
+    while True:
+        # send a query, then iterate over ['response']['docs']
+        result = query(querystring, rows=size, start=num_retrieved, fields=fields)
+        
+        if new_iter:
+            num_found = result['response']['numFound']
+            new_iter = False
+        
+        if num_found == num_retrieved:
+            raise StopIteration
+        
+        batch = [doc for doc in result['response']['docs']]
+        num_retrieved += len(batch)
+        
+        yield batch
+        
+def batch_ids(querystring, num=10):
+    """ Returns lists of ids for querystring of
+        at most length [num]."""
+    
+    for batch in batchquery(querystring, num):
+        yield [doc['id'] for doc in batch]
             
-
-def jsonquery():
-    pass
-
-def xmlquery():
-    pass
-
+    
+def batch_ids(querystring, num=10):
+    """ Returns lists of ids for querystring of
+        at most length [num]."""
+    
+    g = getallids(querystring)
+    batch = []
+    while True:
+        
+        try:
+            doc_id = g.next()
+            batch.append(doc_id)
+            if len(batch) == num:
+                yield batch
+                # new batch
+                batch = []
+                
+        except StopIteration:
+            # give up what's left
+            yield batch
+            return 
+            
 
 def getnumfound(querystring):
     """ Return the total number oqf matches for the query. """
-    return int(query(querystring, rows=0, json=True)['response']['numFound'])
+    return int(query(querystring, rows=0)['response']['numFound'])
 
 
 def getallids(querystring):

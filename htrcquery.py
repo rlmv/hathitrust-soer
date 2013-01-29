@@ -6,32 +6,10 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from solr.solrproxy import iterquery, getnumfound, getallids, getmarc
+from solr.solrproxy import iterquery, getnumfound, getallids, getmarc, batchquery, batch_ids
 
 
-def batch_ids(querystring, num=10):
-    """ Returns lists of ids for querystring of
-        at most length [num]."""
-    
-    g = getallids(querystring)
-    batch = []
-    while True:
-        
-        try:
-            doc_id = g.next()
-            batch.append(doc_id)
-            if len(batch) == num:
-                yield batch
-                # new batch
-                batch = []
-                
-        except StopIteration:
-            # give up what's left
-            yield batch
-            return 
-            
-
-def main(argv):
+def main(args):
     
     """ Implements a command line tool that performs queries against
         the HTRC Solr Proxy."""
@@ -56,14 +34,14 @@ def main(argv):
     parser.add_argument('-m', '--marc', type=lambda x: ZipFile(x, 'w'),
                         metavar='MARCFILE', help='retrieve MARC records and write to zip file')
     
-    # arguments to implement:   marc retriever - exclusive from --fields and -n
+    # arguments to implement:   
     #                           xml option
     #                           max - specify a maximum number of results to retrieve.
     #                           pretty - pretty output
     # deal with mutually exclusive blocks.
     
     
-    args = parser.parse_args(argv[1:])
+    args = parser.parse_args(args)
     outfile = args.outfile
     
     try: 
@@ -117,4 +95,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])
