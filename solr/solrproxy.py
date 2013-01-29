@@ -2,6 +2,7 @@
 import sys
 import json
 import argparse
+import zipfile
 
 import requests
 try:
@@ -20,7 +21,6 @@ QUERY_STUB = "/solr/select/"
 MARC_STUB = "/solr/MARC/"
 querybaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), QUERY_STUB])
 marcbaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), MARC_STUB])
-
 
 def query(querystring, rows=10, start=0, fields=[], json=True):
     """
@@ -125,12 +125,17 @@ def getmarc(ids):
     
     r = requests.get(marcbaseurl, params=params)
     r.raise_for_status()
-    
     return r.content
     
 
 
 if __name__ == "__main__":
-      ids = ['mdp.39015062319309', 'mdp.39015026997125', 'uc1.31822021576848']
-      print getmarc(ids)
+      ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']
+      with open('pairtest.zip', 'w') as f:
+        f.write(getmarc(ids))
+        f.write(getmarc(['mdp.39015062319309']))
+      #with zipfile.ZipFile('marc.zip', 'w') as z:
+      #  z.writestr('marc', getmarc(['mdp.39015062319309']))
+      #  z.writestr('marc', getmarc(ids))
+      #  
 

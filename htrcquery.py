@@ -3,8 +3,10 @@
 import sys
 import json
 import argparse
+from cStringIO import StringIO
+from zipfile import ZipFile
 
-from solr.solrproxy import iterquery, getnumfound, getallids
+from solr.solrproxy import iterquery, getnumfound, getallids, getmarc
 
 
 def main(argv):
@@ -27,6 +29,8 @@ def main(argv):
                         help='list the total number of results returned by this query')
     parser.add_argument('-i', '--ids', action='store_true',
                         help='output a stream of document ids')
+    parser.add_argument('-m', '--marc', type=lambda x: ZipFile(x, 'w'),
+                        metavar='MARCFILE', help='retrieve MARC records and write to zip file')
     
     # arguments to implement:   marc retriever - exclusive from --fields and -n
     #                           xml option
@@ -45,11 +49,19 @@ def main(argv):
         
         elif args.ids:
             for doc_id in getallids(args.querystring):
-                outfile.write("{}\n".format(doc_id))     
-        # elif marc:
-        #       ...
+                outfile.write("{}\n".format(doc_id))
+                
+        elif args.marc:
+            marcfile = args.marc
+            for doc_id in getallids(args.querystring):
+                marc = getmarc([doc_id])
+                # there's probably a faster way to merge multiple zip
+                # files together...
+                with ZipFile(StringIO(marc)) as z:
+                    name = z.namelist()[0]
+                    marcfile.writestr(name, z.read(name))
+                
         # regular query:
-        # do these results need to be wrapped in a dict or list?
         else:
             _first = True # need to wrangle with the formatting...
             outfile.write('{ "results" : [\n')
