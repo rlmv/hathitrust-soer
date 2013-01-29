@@ -40,7 +40,6 @@ def query(querystring, rows=10, start=0, fields=[]):
         fields: an iterable of fields to return with the
             response, eg. fl=['title', 'author']
 
-
     Return:
         JSON resource
     """
@@ -80,27 +79,9 @@ def iterquery(querystring, rows=10, fields=[]):
         function...TODO: implement some handling.
     """
     
-    num_retrieved = 0
-    new_iter = True
-    num_found = None
-    
-    """" need to iteate over ['response']['docs']"""
-    
-    while True:
-        # send a query, then iterate over ['response']['docs']
-        result = query(querystring, rows=rows, start=num_retrieved, fields=fields)
+    for doc in batchquery(querystring, size=rows, fields=fields):
+        yield doc
         
-        if new_iter:
-            num_found = result['response']['numFound']
-            new_iter = False
-        
-        if num_found == num_retrieved:
-            raise StopIteration
-            
-        for doc in result['response']['docs']:
-            num_retrieved += 1
-            
-            yield doc
 
 def batchquery(querystring, size=10, fields=[]):
     """ Returns a generator over batches of query results.
@@ -135,28 +116,6 @@ def batch_ids(querystring, num=10):
     for batch in batchquery(querystring, num):
         yield [doc['id'] for doc in batch]
             
-    
-def batch_ids(querystring, num=10):
-    """ Returns lists of ids for querystring of
-        at most length [num]."""
-    
-    g = getallids(querystring)
-    batch = []
-    while True:
-        
-        try:
-            doc_id = g.next()
-            batch.append(doc_id)
-            if len(batch) == num:
-                yield batch
-                # new batch
-                batch = []
-                
-        except StopIteration:
-            # give up what's left
-            yield batch
-            return 
-            
 
 def getnumfound(querystring):
     """ Return the total number oqf matches for the query. """
@@ -172,7 +131,10 @@ def getallids(querystring):
 
 def getmarc(ids):
     """ Retrieves MARC data from the Solr server.
-        Returns zip content. """
+        Returns zip content.
+        
+        ids - a list of document ids
+    """
       
     idstring = "|".join(doc_id for doc_id in ids)
     params = {"volumeIDs" : idstring}
@@ -184,12 +146,6 @@ def getmarc(ids):
 
 
 if __name__ == "__main__":
-      #ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']
-      #with open('pairtest.zip', 'w') as f:
-      #  f.write(getmarc(ids))
-      #  f.write(getmarc(['mdp.39015062319309']))
-      ##with zipfile.ZipFile('marc.zip', 'w') as z:
-      ##  z.writestr('marc', getmarc(['mdp.39015062319309']))
-      ##  z.writestr('marc', getmarc(ids))
-      ##  
+    #ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']
+      
     print _cleanquery("author : 'new zealand'")
