@@ -8,18 +8,13 @@ from string import replace
 import requests
 
 
-    
-# TODO: quoting in the querystring needs some help -
-# things need to be simplified - right now you can only
-# use "" marks inside the querystring - write a function
-# that runs through and does a replace on them.
-
 SOLR_HOST = "http://chinkapin.pti.indiana.edu"
 SOLR_PORT = 9994
 QUERY_STUB = "/solr/select/"
 MARC_STUB = "/solr/MARC/"
 querybaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), QUERY_STUB])
 marcbaseurl = "".join([SOLR_HOST, ":", str(SOLR_PORT), MARC_STUB])
+
 
 def _cleanquery(querystring):
     """ Cleans up the query - replaces internal
@@ -109,6 +104,7 @@ def batchquery(querystring, size=10, fields=[]):
         
         yield batch
         
+        
 def batch_ids(querystring, num=10):
     """ Returns lists of ids for querystring of
         at most length [num]."""
@@ -143,7 +139,6 @@ def getmarc(ids):
     r.raise_for_status()
     return r.content
     
-
 
 if __name__ == "__main__":
     #ids = [ 'mdp.39015026997125', 'uc1.31822021576848', 'uc2.ark:/13960/t3902080r']

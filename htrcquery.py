@@ -6,7 +6,8 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from solr.solrproxy import iterquery, getnumfound, getallids, getmarc, batchquery, batch_ids
+from solr.solrproxy import iterquery, getnumfound, \
+        getallids, getmarc, batch_ids
 
 
 def main(args):
@@ -21,7 +22,7 @@ def main(args):
     
     parser = argparse.ArgumentParser(
                         description="This is a command line tool for the HTRC Solr Proxy.")
-    parser.add_argument('querystring', metavar='QUERY',
+    parser.add_argument('querystring',metavar='QUERY',
                         help='a Solr query string')
     parser.add_argument('-f', '--fields', metavar='FIELD', nargs='*',
                         help='fields to include with the results')
@@ -80,7 +81,9 @@ def main(args):
                 
             outfile.write('\n]}')
             
-    ## We need to catch HTTP errors here.
+
+    ## We probably need to catch HTTP errors here...
+    
     except KeyboardInterrupt:
         sys.exit()
                 
