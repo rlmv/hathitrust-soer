@@ -15,9 +15,6 @@ def main(args):
     """ Implements a command line tool that performs queries against
         the HTRC Solr Proxy."""
     
-    # can we make it so that the querystring is input without surrounding
-    # quotation marks?
-    
     # ToDo: refactor...
     
     parser = argparse.ArgumentParser(
@@ -36,7 +33,6 @@ def main(args):
                         metavar='MARCFILE', help='retrieve MARC records and write to zip file')
     
     # arguments to implement:   
-    #                           xml option
     #                           max - specify a maximum number of results to retrieve.
     #                           pretty - pretty output
     # deal with mutually exclusive blocks.
@@ -94,7 +90,6 @@ def main(args):
             args.marc.close()
         except AttributeError:
             pass
-
 
 
 if __name__ == "__main__":
