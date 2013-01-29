@@ -9,6 +9,28 @@ from zipfile import ZipFile
 from solr.solrproxy import iterquery, getnumfound, getallids, getmarc
 
 
+def batch_ids(querystring, num=10):
+    """ Returns lists of ids for querystring of
+        at most length [num]."""
+    
+    g = getallids(querystring)
+    batch = []
+    while True:
+        
+        try:
+            doc_id = g.next()
+            batch.append(doc_id)
+            if len(batch) == num:
+                yield batch
+                # new batch
+                batch = []
+                
+        except StopIteration:
+            # give up what's left
+            yield batch
+            return 
+            
+
 def main(argv):
     
     """ Implements a command line tool that performs queries against
@@ -16,6 +38,8 @@ def main(argv):
     
     # can we make it so that the querystring is input without surrounding
     # quotation marks?
+    
+    # ToDo: refactor...
     
     parser = argparse.ArgumentParser(
                         description="This is a command line tool for the HTRC Solr Proxy.")
@@ -53,13 +77,13 @@ def main(argv):
                 
         elif args.marc:
             marcfile = args.marc
-            for doc_id in getallids(args.querystring):
-                marc = getmarc([doc_id])
+            for doc_ids in batch_ids(args.querystring):
+                marcs = getmarc(doc_ids)
                 # there's probably a faster way to merge multiple zip
                 # files together...
-                with ZipFile(StringIO(marc)) as z:
-                    name = z.namelist()[0]
-                    marcfile.writestr(name, z.read(name))
+                with ZipFile(StringIO(marcs)) as z:
+                    for name in z.namelist():
+                        marcfile.writestr(name, z.read(name))
                 
         # regular query:
         else:
