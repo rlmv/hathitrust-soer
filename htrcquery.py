@@ -45,7 +45,7 @@ def main(argv):
                         description="This is a command line tool for the HTRC Solr Proxy.")
     parser.add_argument('querystring', metavar='QUERY',
                         help='a Solr query string')
-    parser.add_argument('--fields', metavar='FIELD', nargs='*',
+    parser.add_argument('-f', '--fields', metavar='FIELD', nargs='*',
                         help='fields to include with the results')
     parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'),
                         help='write output to this file')

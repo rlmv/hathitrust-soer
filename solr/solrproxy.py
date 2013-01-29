@@ -7,10 +7,7 @@ from string import replace
 
 import requests
 
-try:
-    from lxml import etree
-except ImportError:
-    import xml.etree.cElementTree as etree
+
     
 # TODO: quoting in the querystring needs some help -
 # things need to be simplified - right now you can only
@@ -34,18 +31,18 @@ def _cleanquery(querystring):
     queryterms, but "..." as a single concatenated phrase.
     """
     return replace(querystring, '\'', '\"')
+
     
-def query(querystring, rows=10, start=0, fields=[], json=True):
+def query(querystring, rows=10, start=0, fields=[]):
     """
     Arguments:
         rows: the maximum number of results to return
         fields: an iterable of fields to return with the
             response, eg. fl=['title', 'author']
-        json: true by default  - returns the JSON object,
-            or, if false, returns an xml tree.
+
 
     Return:
-        JSON resource, or lxml etree.
+        JSON resource
     """
     querystring = _cleanquery(querystring)
     
@@ -54,9 +51,7 @@ def query(querystring, rows=10, start=0, fields=[], json=True):
     terms['rows'] = rows
     terms['start'] = start
     terms['qt'] = 'sharding'
-
-    if json:
-        terms['wt'] = 'json'
+    terms['wt'] = 'json'
 
     if fields:
         terms['fl'] = ','.join(fields)
@@ -64,10 +59,7 @@ def query(querystring, rows=10, start=0, fields=[], json=True):
     r = requests.get(querybaseurl, params=terms)
     r.raise_for_status()
 
-    if json:
-        return r.json()
-
-    return etree.fromstring(r.content)
+    return r.json()
 
 
 def iterquery(querystring, rows=10, fields=[]):
@@ -96,7 +88,7 @@ def iterquery(querystring, rows=10, fields=[]):
     
     while True:
         # send a query, then iterate over ['response']['docs']
-        result = query(querystring, rows=rows, start=num_retrieved, fields=fields, json=True)
+        result = query(querystring, rows=rows, start=num_retrieved, fields=fields)
         
         if new_iter:
             num_found = result['response']['numFound']
@@ -110,6 +102,7 @@ def iterquery(querystring, rows=10, fields=[]):
             
             yield doc
 
+            
 
 def jsonquery():
     pass
