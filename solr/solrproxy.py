@@ -74,8 +74,9 @@ def iterquery(querystring, rows=10, fields=[]):
         function...TODO: implement some handling.
     """
     
-    for doc in batchquery(querystring, size=rows, fields=fields):
-        yield doc
+    for batch in batchquery(querystring, size=rows, fields=fields):
+        for doc in batch:
+            yield doc
         
 
 def batchquery(querystring, size=10, fields=[]):

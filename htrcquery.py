@@ -19,17 +19,31 @@ def main(args):
     
     parser = argparse.ArgumentParser(
                         description="This is a command line tool for the HTRC Solr Proxy.")
-    parser.add_argument('querystring',metavar='QUERY',
+    
+    parser.add_argument('querystring',
+                        metavar='QUERY',
                         help='a Solr query string')
-    parser.add_argument('-f', '--fields', metavar='FIELD', nargs='*',
+    
+    parser.add_argument('-f', '--fields',
+                        metavar='FIELD',
+                        nargs='*',
                         help='fields to include with the results')
-    parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'),
+    
+    parser.add_argument('-o', '--outfile',
+                        default=sys.stdout,
+                        type=argparse.FileType('w'),
                         help='write output to this file')
-    parser.add_argument('-n', '--numfound', action='store_true',
+    
+    parser.add_argument('-n', '--numfound',
+                        action='store_true',
                         help='list the total number of results returned by this query')
-    parser.add_argument('-i', '--ids', action='store_true',
+    
+    parser.add_argument('-i', '--ids',
+                        action='store_true',
                         help='output a stream of document ids')
-    parser.add_argument('-m', '--marc', type=lambda x: ZipFile(x, 'w'),
+    
+    parser.add_argument('-m', '--marc',
+                        type=lambda x: ZipFile(x, 'w'),
                         metavar='MARCFILE', help='retrieve MARC records and write to zip file')
     
     # arguments to implement:   
