@@ -44,10 +44,12 @@ def normalize_year(year_string):
     Returns the most recent year that can be extracted
     from year_string.
     """
+    if not year_string:
+        return None
     matches = PUB_REGEX.findall(year_string)
-    year = max(matches, key=lambda s: int(s))
 
-    return int(year)
+    return int(max(matches, key=lambda s: int(s)))
+  
 
 
 if __name__ == "__main__":
@@ -60,7 +62,5 @@ if __name__ == "__main__":
         year = r.pubyear()
 
         print normalize_year(year)
-
-
 
 
