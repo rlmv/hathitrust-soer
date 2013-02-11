@@ -5,10 +5,10 @@ import re
 
 from pymarc import parse_xml_to_array
 
-def retrieve_xml_paths():
+def retrieve_xml_paths(x):
     """ Generator over absolute filepaths to xml metadata files."""
 
-    l = glob.iglob('./data/raw/*.xml')
+    l = glob.iglob(x)
 
     for x in l:
         yield os.path.abspath(x) 
@@ -23,6 +23,7 @@ def get_record_from_METS(fpath):
         r = None
     return r
 
+
 """ 
 From http://www.loc.gov/marc/bibliographic/bd260.html:
 
@@ -31,15 +32,35 @@ a closing bracket (]) or closing parenthesis ()). If subfield $c is
 followed by some other subfield, the period is omitted. 
 """
 
-PUB_REGEX = re.compile(r'[\d]{4})')
-def normalize_pubyear(year):
-    """ Attempt to normalize the publication year."""
+PUB_REGEX = re.compile(r'[\d]{4}')
+""" 
+This may need to be changed -- it won't deal with incomplete dates
+like '19--' which I haven't seen recently, but may still be around.
+"""
+
+def normalize_year(year_string):
+    """ Attempt to normalize a year string. 
+
+    Returns the most recent year that can be extracted
+    from year_string.
+    """
+    matches = PUB_REGEX.findall(year_string)
+    year = max(matches, key=lambda s: int(s))
+
+    return int(year)
 
 
 if __name__ == "__main__":
 
-    for p in retrieve_xml_paths():
+    v = '../htrc/m/*.xml'
+    x = './data/raw/*.xml'  
+
+    for p in retrieve_xml_paths(v):
         r = get_record_from_METS(p)
-        print r.pubyear()
+        year = r.pubyear()
+
+        print normalize_year(year)
+
+
 
 
