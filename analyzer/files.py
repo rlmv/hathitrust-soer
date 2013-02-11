@@ -5,10 +5,14 @@ import re
 
 from pymarc import parse_xml_to_array
 
-def retrieve_xml_paths(x):
-    """ Generator over absolute filepaths to xml metadata files."""
+def retrieve_xml_paths(target_dir):
+    """ Generator over absolute filepaths for xml metadata files.
 
-    l = glob.iglob(x)
+    Args:
+        target_dir: path to directory containing xml files
+    """
+    target_dir = os.path.join(target_dir, '*.xml')
+    l = glob.iglob(target_dir)
 
     for x in l:
         yield os.path.abspath(x) 
@@ -53,8 +57,8 @@ def normalize_year(year_string):
 
 if __name__ == "__main__":
 
-    v = '../htrc/m/*.xml'
-    x = './data/raw/*.xml'  
+    v = '../htrc_api/m'
+    x = './data/raw'  
 
     for p in retrieve_xml_paths(v):
         r = get_record_from_METS(p)
