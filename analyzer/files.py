@@ -32,7 +32,7 @@ a closing bracket (]) or closing parenthesis ()). If subfield $c is
 followed by some other subfield, the period is omitted. 
 """
 
-PUB_REGEX = re.compile(r'[\d]{4}')
+YEAR_REGEX = re.compile(r'[\d]{4}')
 """ 
 This may need to be changed -- it won't deal with incomplete dates
 like '19--' which I haven't seen recently, but may still be around.
@@ -46,11 +46,10 @@ def normalize_year(year_string):
     """
     if not year_string:
         return None
-    matches = PUB_REGEX.findall(year_string)
+    matches = YEAR_REGEX.findall(year_string)
 
     return int(max(matches, key=lambda s: int(s)))
   
-
 
 if __name__ == "__main__":
 
