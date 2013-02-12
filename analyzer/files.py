@@ -5,6 +5,7 @@ import re
 
 from pymarc import parse_xml_to_array
 
+
 def retrieve_xml_paths(target_dir):
     """ Generator over absolute filepaths for xml metadata files.
 
@@ -51,19 +52,20 @@ def normalize_year(year_string):
     if not year_string:
         return None
     matches = YEAR_REGEX.findall(year_string)
+    return max(map(int, matches)) if matches else None
 
-    return int(max(matches, key=lambda s: int(s)))
   
 
 if __name__ == "__main__":
 
     v = '../htrc_api/m'
     x = './data/raw'  
+    
 
     for p in retrieve_xml_paths(v):
         r = get_record_from_METS(p)
         year = r.pubyear()
 
         print normalize_year(year)
-
+    print(normalize_year(None))
 
