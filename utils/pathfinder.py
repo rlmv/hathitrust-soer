@@ -5,7 +5,7 @@ import os
 import ptree
 
 
-class PathFinder(object):
+class PairTreePathFinder(object):
     """Class to access HathiTrust pairtree collections. 
 
     Maps htids onto a pairtree collection. We assume the standard HathiTrust
@@ -13,7 +13,7 @@ class PathFinder(object):
         /path_to_collection/namespace/'pairtree_root'/pairtree_path/id_directory
 
     Usage:
-        >>> pf = PathFinder("Volumes/home/bo.marchman/non_google)
+        >>> pf = PairTreePathFinder("Volumes/home/bo.marchman/non_google)
         >>> pf.get_path_to_htid("dul1.ark:/13960/t00z7x54f")
         /Volumes/home/bo.marchman/non_google/dul1/pairtree_root/ar/k+/=1/39/60/=t/00/z7/x5/4f/ark+=13960=t00z7x54f
     """
@@ -60,7 +60,7 @@ class PathFinder(object):
 
 if __name__ == "__main__":
 
-    pf = PathFinder("/Volumes/home/bo.marchman/non_google")
+    pf = PairTreePathFinder("/Volumes/home/bo.marchman/non_google")
     print pf.get_path_to_htid('dul1.ark:/13960/t00z7x54f')
 
 
