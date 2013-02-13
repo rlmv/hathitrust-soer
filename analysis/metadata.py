@@ -81,6 +81,25 @@ def map_publication_years(records):
     return mapping
 
 
+def map_subjects(records):
+    """ Map subjects of the collection into a dictionary.
+
+        I `believe` this is the correct way to implement this, and that
+        subject names live in the 'a' subfield. 
+
+        Should the keys be lowercased? 
+    """
+
+    mapping = Counter()
+
+    for r in records:
+        for f in r.subjects():
+            subj_name = f.get_subfields('a')[0]
+            mapping[subj_name] += 1
+
+    return mapping
+
+
 
 if __name__ == "__main__":
 
@@ -93,4 +112,7 @@ if __name__ == "__main__":
     #     print normalize_year(r.pubyear())
     
     d = map_publication_years(records)
+    s = map_subjects(records)
+    print d
+    print s
 
