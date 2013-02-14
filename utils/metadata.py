@@ -90,6 +90,7 @@ class MarcSQLite(object):
 
         return record
 
+
     def get_all_ids(self):
         """ Return an iterator over all ids in the database."""
 
@@ -110,53 +111,11 @@ def get_id_from_record(record):
 
 
 def parse_xml_to_SQLite(xml_file, sqlite_name, strict=False, normalize_form=None):
+    """ Parse a single file collection of xml metadata, and
+        store it in a SQLite database. """
 
     handler = SQLiteXmlHandler(sqlite_name, strict, normalize_form)
     parse_xml(xml_file, handler)
-
-
-def get_xml_paths_from_dir(target_dir):
-    """ Iterator over a directory of xml metadata files.
-
-    Args:
-        target_dir: path to directory containing xml files
-    """
-    target_dir = os.path.join(target_dir, '*.xml')
-    l = glob.iglob(target_dir)
-
-    for x in l:
-        yield os.path.abspath(x) 
-
-
-def retrieve_METS_paths_from_pairtree(doc_ids, root):
-    """ Extract METS meta data from pairtree collection rooted at 'root'
-
-    Args:
-    - doc_ids:iterable of document ids to extracte
-    - root of the HathiTrust collection
-
-    Returns:
-        A generator over absolute file paths.
-    """
-    pf = PairTreePathFinder(root)
-
-    for x in doc_ids:
-        path, post = pf.get_path_to_htid(x)
-        mpath = os.path.join(path, post + '.mets.xml')
-        yield mpath
-
-def get_MARC_by_id(doc_ids, marc_path):
-    """ Generate pymarc representaions of MARC records from a single 
-        file.
-
-        Args:
-        - doc_ids: ids for which to retrieve records
-        - marc_path: path to the MARC file
-    """
-
-    records = pymarc.parse_xml_to_array(marc_path)
-    for r in records:
-        yield r
 
 
 """ 
@@ -183,13 +142,6 @@ def normalize_year(year_string):
         return None
     matches = YEAR_REGEX.findall(year_string)
     return max(map(int, matches)) if matches else None
-
-
-def get_records_from_meta(fpath):
-    """ Parse marc xml and return an array of pymarc records."""
-    
-    r = parse_xml_to_array(fpath)
-    return r
 
   
 def map_publication_years(records):
@@ -230,6 +182,40 @@ def map_subjects(records):
             mapping[subj_name] += 1
 
     return mapping
+
+
+
+def get_xml_paths_from_dir(target_dir):
+    """ Iterator over a directory of xml metadata files.
+
+    Args:
+        target_dir: path to directory containing xml files
+    """
+    target_dir = os.path.join(target_dir, '*.xml')
+    l = glob.iglob(target_dir)
+
+    for x in l:
+        yield os.path.abspath(x) 
+
+
+def retrieve_METS_paths_from_pairtree(doc_ids, root):
+    """ Extract METS meta data from pairtree collection rooted at 'root'
+
+    Args:
+    - doc_ids:iterable of document ids to extracte
+    - root of the HathiTrust collection
+
+    Returns:
+        A generator over absolute file paths.
+    """
+    pf = PairTreePathFinder(root)
+
+    for x in doc_ids:
+        path, post = pf.get_path_to_htid(x)
+        mpath = os.path.join(path, post + '.mets.xml')
+        yield mpath
+
+
 
 
 if __name__ == "__main__":
