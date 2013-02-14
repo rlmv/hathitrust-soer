@@ -121,7 +121,6 @@ def parse_xml_string_to_record(xmlstring):
 
     xml_io= StringIO.StringIO(xmlstring)
     record = parse_xml_to_array(xml_io)[0]
-
     return record
 
 
@@ -195,8 +194,11 @@ def map_subjects(records):
 
     for r in records:
         for f in r.subjects():
-            subj_name = f.get_subfields('a')[0]
-            mapping[subj_name] += 1
+            try:
+                subj_name = f.get_subfields('a')[0]
+                mapping[subj_name] += 1
+            except IndexError:
+                pass
 
     return mapping
 
