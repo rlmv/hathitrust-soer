@@ -203,7 +203,6 @@ def map_subjects(records):
     return mapping
 
 
-
 def get_xml_paths_from_dir(target_dir):
     """ Iterator over a directory of xml metadata files.
 
