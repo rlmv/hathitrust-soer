@@ -6,17 +6,25 @@ import StringIO
 import sqlite3 as sqlite
 from collections import Counter
 
-from lxml import etree
 import pymarc
-from pymarc import parse_xml, parse_xml_to_array, XmlHandler, Record, record_to_xml
-
-
+from pymarc import parse_xml, parse_xml_to_array, XmlHandler, record_to_xml
 
 from pathfinder import PairTreePathFinder
 
 
+def parse_xml_to_SQLite(xml_file, sqlite_name, strict=False, normalize_form=None):
+    """ Parse a single file collection of xml metadata, and
+        store it in a SQLite database. 
+
+        This is function to use if you are trying to convert a 
+        HathiTrust dataset file into a managable format."""
+
+    handler = SQLiteXmlHandler(sqlite_name, strict, normalize_form)
+    parse_xml(xml_file, handler)
+
+
 class SQLiteXmlHandler(XmlHandler):
-    """ Subclass of XMLHandler providing a direct write to an SQLite 
+    """ Subclass of pymarc.XmlHandler providing a direct write to an SQLite 
         database.
     """
 
@@ -41,6 +49,7 @@ class MarcSQLite(object):
         self.open_conn()
         self._execute('''CREATE TABLE IF NOT EXISTS records 
                              (id TEXT, record TEXT)''')
+        #close?
 
     def __enter__(self):
         if not self.conn:
@@ -85,8 +94,7 @@ class MarcSQLite(object):
         r = cur.fetchone()
         if not r:
             return None
-        buff = StringIO.StringIO(r[0])
-        record = parse_xml_to_array(buff)[0]
+        record = parse_xml_string_to_record(r[0])
 
         return record
 
@@ -97,6 +105,24 @@ class MarcSQLite(object):
         cur = self._execute('''SELECT id FROM records''')
         for x in cur:
             yield x[0]
+
+
+    def get_all_records(self):
+        """ Return an iterator over all records in the database."""
+
+        cur = self._execute('''SELECT record FROM records''')
+        for y in cur:
+            record = parse_xml_string_to_record(y[0])
+            yield record
+
+
+def parse_xml_string_to_record(xmlstring):
+    """ Parse an xml string and return a pymarc.Record object. """
+
+    xml_io= StringIO.StringIO(xmlstring)
+    record = parse_xml_to_array(xml_io)[0]
+
+    return record
 
 
 def get_id_from_record(record):
@@ -110,14 +136,6 @@ def get_id_from_record(record):
     return htid
 
 
-def parse_xml_to_SQLite(xml_file, sqlite_name, strict=False, normalize_form=None):
-    """ Parse a single file collection of xml metadata, and
-        store it in a SQLite database. """
-
-    handler = SQLiteXmlHandler(sqlite_name, strict, normalize_form)
-    parse_xml(xml_file, handler)
-
-
 """ 
 From http://www.loc.gov/marc/bibliographic/bd260.html:
 
@@ -125,7 +143,6 @@ Subfield $c ends with a period (.), hyphen (-) for open-ended dates,
 a closing bracket (]) or closing parenthesis ()). If subfield $c is 
 followed by some other subfield, the period is omitted. 
 """
-
 YEAR_REGEX = re.compile(r'[\d]{4}')
 """ 
 This regex may need to be changed -- it won't deal with incomplete dates
@@ -216,8 +233,6 @@ def retrieve_METS_paths_from_pairtree(doc_ids, root):
         yield mpath
 
 
-
-
 if __name__ == "__main__":
 
     # v = '../htrc_api/m'
@@ -245,8 +260,8 @@ if __name__ == "__main__":
     #     '../non_google.20111101_01.db')
 
     with MarcSQLite('../non_google.20111101_01.db') as db:
-        for id_ in db.get_all_ids():
-            print id_
+        for r in db.get_all_records():
+            print r.title()
 
 
 
