@@ -37,6 +37,8 @@ class PairTreePathFinder(object):
                 dul1.ark:/13960/t00z7x54f
                 uc2.ark:/13960/t9p26rn3h
                 etc.
+
+            Returns a tuple - (path, postfix)
         """
 
         ns, post = htid.split('.')
@@ -50,7 +52,7 @@ class PairTreePathFinder(object):
         if not os.path.exists(fullpath):
             raise ValueError("Is id {} in the collection? Path {} not found."
                     .format(htid, fullpath))
-        return fullpath
+        return fullpath, post
 
 
     def encode(self, htid):
