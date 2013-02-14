@@ -29,7 +29,6 @@ class SQLiteXmlHandler(XmlHandler):
 
 
     def process_record(self, record):
-        print "inserting"
         with self.sqlite_db as db:
             db.insert_record(record)
         
@@ -53,7 +52,6 @@ class MarcSQLite(object):
 
     def open_conn(self):
         self.conn = sqlite.connect(self.fname)
-        #self.conn.text_factory = unicode # serialization is not in unicode.
 
     def close_conn(self):
         self.conn.close()
@@ -62,18 +60,18 @@ class MarcSQLite(object):
     def _commit(self):
         self.conn.commit()
 
-    def _execute(self, statement, *params): 
-        return self.conn.execute(statement, *params)
+    def _execute(self, statement, params=None): 
+        if not params:
+            params = []
+        return self.conn.execute(statement, params)
 
 
     def insert_record(self, record):
-        """ Insert a serialize MARC21 representation of the pymarc record
+        """ Insert a serialize xml representation of the pymarc record
             into the database, keyed by id """
         htid = get_id_from_record(record)
-        # serialized = record.as_marc()
-        # serialized = serialized.decode('utf-8')
+        print htid
         xml = record_to_xml(record)
-        print xml
         self._execute('''INSERT OR REPLACE INTO records
                              VALUES (?, ?)''', [htid, xml])
         self._commit()
@@ -117,8 +115,8 @@ def parse_xml_to_SQLite(xml_file, sqlite_name, strict=False, normalize_form=None
     parse_xml(xml_file, handler)
 
 
-def retrieve_xml_paths_from_dir(target_dir):
-    """ Generator over a directory of xml metadata files.
+def get_xml_paths_from_dir(target_dir):
+    """ Iterator over a directory of xml metadata files.
 
     Args:
         target_dir: path to directory containing xml files
@@ -257,16 +255,11 @@ if __name__ == "__main__":
     #      u'dul1.ark:/13960/t0000zg6j']
 
 
+    # parse_xml_to_SQLite('../non_google.20111101_01.xml', 
+    #     '../non_google.20111101_01.db')
 
-    # for r in get_MARC_by_id(l, '../non_google.20111101_01.xml'):
-    #     print r.title()
-    #     print r['947']['a
-
-    #parse_xml_to_SQLite('../non_google.20111101_01.xml', 'test.db')
-
-    with MarcSQLite('test.db') as db:
-         print db.select_record('dul1.ark:/13960/t0ks7fx1m')
-         for id_ in db.get_all_ids():
+    with MarcSQLite('../non_google.20111101_01.db') as db:
+        for id_ in db.get_all_ids():
             print id_
 
 
