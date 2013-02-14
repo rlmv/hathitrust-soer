@@ -88,7 +88,7 @@ class MarcSQLite(object):
 
     def select_record(self, htid):
         """ Select a pymarc.Record object from the database."""
-        
+        1
         cur = self._execute('''SELECT record FROM records
                                    WHERE id = ?''', [htid])
         r = cur.fetchone()
@@ -132,7 +132,7 @@ def get_id_from_record(record):
         htid = record['974']['a']
     except TypeError:
         htid = None
-    return htid
+    return htid 
 
 
 """ 
@@ -159,6 +159,22 @@ def normalize_year(year_string):
     matches = YEAR_REGEX.findall(year_string)
     return max(map(int, matches)) if matches else None
 
+
+def normalize_subject(subj_string):
+    """ Normalize a subject string.
+
+    Current rules:
+        - remove extraneous quotation marks
+        - remove '[from old catalog]'
+        - remove trailing periods and commas (not always correct though, in 
+            instances like 'U.S.A.')
+    """
+    subj_string = subj_string.strip('"')
+    subj_string = subj_string.replace(" [from old catalog]", "")
+    subj_string = subj_string.rstrip(",.")
+
+    return subj_string
+    
   
 def map_publication_years(records):
     """ Map the publication years of a collection into a dictionary. 
@@ -195,8 +211,9 @@ def map_subjects(records):
     for r in records:
         for f in r.subjects():
             try:
-                subj_name = f.get_subfields('a')[0]
-                mapping[subj_name] += 1
+                subj = f.get_subfields('a')[0]
+                subj = normalize_subject(subj)
+                mapping[subj] += 1
             except IndexError:
                 pass
 
@@ -260,9 +277,17 @@ if __name__ == "__main__":
     # parse_xml_to_SQLite('../non_google.20111101_01.xml', 
     #     '../non_google.20111101_01.db')
 
-    with MarcSQLite('../non_google.20111101_01.db') as db:
-        for r in db.get_all_records():
-            print r.title()
+    # with MarcSQLite('../non_google.20111101_01.db') as db:
+    #     for r in db.get_all_records():
+    #         print r.title()
+    
 
+    l = ["Magnetic induction.", 
+         "Maine (Battleship) [from old catalog]",
+         '"Mallery, Garrick,"',
+         '"Mammoth cave, Ky. [from old catalog]"']
+
+    for x in l:
+        print normalize_subject(x)
 
 
