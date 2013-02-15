@@ -49,30 +49,21 @@ class MarcSQLite(object):
         self.open_conn()
         self._execute('''CREATE TABLE IF NOT EXISTS records 
                              (id TEXT, record TEXT)''')
-        #close?
+        self.close_conn()
 
     def __enter__(self):
-        if not self.conn:
-            self.open_conn()
-        return self
+        self.open_conn()
 
     def __exit__(self, *exc):
         self.close_conn()
 
     def open_conn(self):
-        self.conn = sqlite.connect(self.fname)
+        if not self.conn:
+            self._conn = sqlite.connect(self.fname)
 
     def close_conn(self):
-        self.conn.close()
-        self.conn = None
-
-    def _commit(self):
-        self.conn.commit()
-
-    def _execute(self, statement, params=None): 
-        if not params:
-            params = []
-        return self.conn.execute(statement, params)
+        self._conn.close()
+        self._conn = None
 
 
     def insert_record(self, record):
@@ -114,6 +105,15 @@ class MarcSQLite(object):
         for y in cur:
             record = parse_xml_string_to_record(y[0])
             yield record
+
+
+    def _commit(self):
+        self._conn.commit()
+
+    def _execute(self, statement, params=None): 
+        if not params:
+            params = []
+        return self._conn.execute(statement, params)
 
 
 def parse_xml_string_to_record(xmlstring):
