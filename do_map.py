@@ -24,20 +24,23 @@ def map_onto_records(func, db, file_stub, sort_by_value=False):
     json_fname = file_stub + ".json"
     csv_fname = file_stub + ".csv"
 
-    mapped = func(db.get_all_records())
+    # mapped = func(db.get_all_records())
 
-    with open(json_fname, 'w') as f:
-        json.dump(mapped, f)
+    # with open(json_fname, 'w') as f:
+    #     json.dump(mapped, f)
+
+    with open(json_fname, 'r') as f:
+        mapped = json.load(f)
 
     i = 1 if sort_by_value else 0
-    f = lambda x: [i]
+    f = lambda x: x[i]
+
     mapped_list = sorted(mapped.items(), key=f)
 
     with open(csv_fname, 'w') as f:
-        csvwriter = UnicodeWriter(f)
+        csvwriter = UnicodeWriter(f, quoting=csv.QUOTE_ALL)
         for key, val in mapped_list:
             csvwriter.writerow([unicode(key), unicode(val)])
-
 
 
 class UnicodeWriter:

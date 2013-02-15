@@ -173,13 +173,16 @@ def normalize_subject(subj_string):
         - remove trailing periods and commas (not always correct though, in 
             instances like 'U.S.A.')
     """
-    subj_string = subj_string.strip('"')
+    subj_string = subj_string.strip('\"\'')
     subj_string = subj_string.replace(" [from old catalog]", "")
     subj_string = subj_string.rstrip(",.")
 
     return subj_string
     
   
+s = '"Sullivan, Timothy Daniel",'
+print normalize_subject(s)
+
 def map_publication_years(records):
     """ Map the publication years of a collection into a dictionary. 
 
