@@ -46,6 +46,7 @@ class MarcSQLite(object):
 
     def __init__(self, db_fname):
         self.fname = db_fname
+        self._conn = None
         self.open_conn()
         self._execute('''CREATE TABLE IF NOT EXISTS records 
                              (id TEXT, record TEXT)''')
@@ -53,12 +54,13 @@ class MarcSQLite(object):
 
     def __enter__(self):
         self.open_conn()
+        return self
 
     def __exit__(self, *exc):
         self.close_conn()
 
     def open_conn(self):
-        if not self.conn:
+        if not self._conn:
             self._conn = sqlite.connect(self.fname)
 
     def close_conn(self):

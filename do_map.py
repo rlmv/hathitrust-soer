@@ -6,7 +6,7 @@ from metadata import map_subjects, map_publication_years, MarcSQLite
 
 
 # change this as needed
-DB_STUB = '../non_google.20111101_01'
+DB_STUB = 'non_google.20111101_01'
 
 
 def map_onto_records(func, db, file_stub, sort_by_value=False):
@@ -31,7 +31,7 @@ def map_onto_records(func, db, file_stub, sort_by_value=False):
     f = lambda x: [i]
     mapped_list = sorted(mapped.items(), key=f)
 
-    with open(csv_name, 'w') as f:
+    with open(csv_fname, 'w') as f:
         csvwriter = csv.writer(f)
         for key, val in mapped_list:
             csvwriter.writerow([key, val])
