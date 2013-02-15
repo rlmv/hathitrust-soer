@@ -145,11 +145,37 @@ From http://www.loc.gov/marc/bibliographic/bd260.html:
 Subfield $c ends with a period (.), hyphen (-) for open-ended dates, 
 a closing bracket (]) or closing parenthesis ()). If subfield $c is 
 followed by some other subfield, the period is omitted. 
+
+The original REGEX:
+YEAR_REGEX = re.compile(r'[\d]{4}') 
+^^ it's too simple, and only catches complete 4-digit dates.
 """
-YEAR_REGEX = re.compile(r'[\d]{4}')
+YEAR_REGEX = re.compile(r'[\d]{4}|[\d]{3}|[\d]{2}')
 """ 
-This regex may need to be changed -- it won't deal with incomplete dates
-like '19--' which I haven't seen recently, but may still be around.
+
+Okay, here are some possibilities that we have to deal with:
+    186-?]
+    [185-?]
+    [189?]
+    187?]
+    184[5?]
+    [186-]
+    c19 --- is the 19th century, or a misinterpretaion of 260$c19 ?
+    cl9l6]
+    M. D. LXXIII.
+    M. D. LXVIII.
+    M.DCC.LXI.
+    191
+    18--
+    18 -19
+    MDCCLXXIX.
+    MDCCLXX-LXXXIX]
+    19 cm.
+
+This new function covers the 2, 3, and 4 digit segmented cases.
+
+Now to convert roman numerals...
+There seem to be a number of cases of `l` being substituted for `1`.
 """
 
 def normalize_year(year_string):
@@ -158,10 +184,22 @@ def normalize_year(year_string):
     Returns the most recent year that can be extracted
     from year_string as an integer. 
     """
+    # if not year_string:
+    #     return None
+    # matches = YEAR_REGEX.findall(year_string)
+
+    # return max(map(int, matches)) if matches else None
+
     if not year_string:
         return None
     matches = YEAR_REGEX.findall(year_string)
-    return max(map(int, matches)) if matches else None
+   
+    normalized = []
+    for m in matches:
+        y = "{:0<4}".format(m) # ljust w/ 0s
+        normalized.append(int(y))
+
+    return normalized[0] if normalized else None
 
 
 def normalize_subject(subj_string):
@@ -179,9 +217,6 @@ def normalize_subject(subj_string):
 
     return subj_string
     
-  
-s = '"Sullivan, Timothy Daniel",'
-print normalize_subject(s)
 
 def map_publication_years(records):
     """ Map the publication years of a collection into a dictionary. 
@@ -197,9 +232,11 @@ def map_publication_years(records):
 
     for r in records:
         year = r.pubyear()
-        year = normalize_year(year)
+        norm_year = normalize_year(year)
+        if not norm_year:
+            print year
 
-        mapping[year] += 1
+        mapping[norm_year] += 1
 
     return mapping
 
@@ -296,5 +333,19 @@ if __name__ == "__main__":
 
     for x in l:
         print normalize_subject(x)
+
+    l = [None, 
+        "186-?]", 
+        "[185-?]",
+        "[189?]",
+        "187?]", 
+        "1898", 
+        "184[5?]", 
+        "[186-]]",
+        "18 -19", 
+        "1"]
+
+    for i in l:
+        print i, normalize_year(i)
 
 

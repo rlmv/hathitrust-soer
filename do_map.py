@@ -24,16 +24,12 @@ def map_onto_records(func, db, file_stub, sort_by_value=False):
     json_fname = file_stub + ".json"
     csv_fname = file_stub + ".csv"
 
-    # mapped = func(db.get_all_records())
+    mapped = func(db.get_all_records())
 
-    # with open(json_fname, 'w') as f:
-    #     json.dump(mapped, f)
+    with open(json_fname, 'w') as f:
+        json.dump(mapped, f)
 
-    with open(json_fname, 'r') as f:
-        mapped = json.load(f)
-
-    i = 1 if sort_by_value else 0
-    f = lambda x: x[i]
+    f = lambda x: x[1 if sort_by_value else 0]
 
     mapped_list = sorted(mapped.items(), key=f)
 
@@ -77,14 +73,16 @@ class UnicodeWriter:
 
 if __name__ == "__main__":
 
+    print "HIHI"
     dbname = DB_STUB + ".db"
     subj_fname = DB_STUB + "_subjects"
     years_fname = DB_STUB + "_years"
 
     with MarcSQLite(dbname) as db:
 
-        map_onto_records(map_subjects, db, subj_fname)
         map_onto_records(map_publication_years, db, years_fname)
+        #map_onto_records(map_subjects, db, subj_fname)
+        
 
 
 
