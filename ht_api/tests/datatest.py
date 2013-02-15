@@ -5,7 +5,7 @@ import requests
 
 # edit oauth_keys.py with your own key
 from oauth_keys import client_key, client_secret
-from dataclient.htdataclient import HTDataClient
+from htdataclient import HTDataClient
 
 
 class TestDataClient(unittest.TestCase):

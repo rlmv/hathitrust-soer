@@ -6,7 +6,7 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from solr.solrproxy import iterquery, getnumfound, \
+from solrproxy import iterquery, getnumfound, \
         getallids, getmarc, batch_ids
 
 

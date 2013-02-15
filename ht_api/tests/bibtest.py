@@ -2,7 +2,7 @@
 
 import unittest
 
-from bibclient.htbibclient import HTBibClient
+from htbibclient import HTBibClient
 
 
 class TestBibClient(unittest.TestCase):
