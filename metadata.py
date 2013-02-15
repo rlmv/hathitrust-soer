@@ -2,7 +2,7 @@
 import os
 import glob
 import re
-import StringIO
+import cStringIO
 import sqlite3 as sqlite
 from collections import Counter
 
@@ -47,6 +47,8 @@ class MarcSQLite(object):
     def __init__(self, db_fname):
         self.fname = db_fname
         self._conn = None
+
+        # set up
         self.open_conn()
         self._execute('''CREATE TABLE IF NOT EXISTS records 
                              (id TEXT, record TEXT)''')
@@ -121,7 +123,7 @@ class MarcSQLite(object):
 def parse_xml_string_to_record(xmlstring):
     """ Parse an xml string and return a pymarc.Record object. """
 
-    xml_io= StringIO.StringIO(xmlstring)
+    xml_io= cStringIO.StringIO(xmlstring)
     record = parse_xml_to_array(xml_io)[0]
     return record
 
