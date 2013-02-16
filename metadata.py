@@ -153,7 +153,7 @@ The original REGEX:
 YEAR_REGEX = re.compile(r'[\d]{4}') 
 ^^ it's too simple, and only catches complete 4-digit dates.
 """
-YEAR_REGEX = re.compile(r'[\d]{4}|[\d]{3}|[\d]{2}')
+YEAR_REGEX = re.compile(r'([\d]{4}|[\d]{3}|([\d]{2}(?![ ]?cm)))')
 """ 
 
 Okay, here are some possibilities that we have to deal with:
@@ -197,15 +197,15 @@ def normalize_year(year_string):
 
     if not year_string:
         return None
-    matches = YEAR_REGEX.findall(year_string)
-   
-    if not matches:
-        # l9l6 --> 1916
-        year_string = year_string.replace('l', '1')
-        matches = YEAR_REGEX.findall(year_string)
-        if not matches:
-            return None
 
+    # l9l6 --> 1916
+    year_string = year_string.replace('l', '1')
+    
+    matches = YEAR_REGEX.findall(year_string)
+    if not matches:
+        return None
+
+    matches = map(lambda x: x[0], matches)        
     y = max(matches, key=lambda x: len(x))
     y = "{:0<4}".format(y) # ljust w/ 0s
 
@@ -364,6 +364,8 @@ if __name__ == "__main__":
             nyear = normalize_year(year)
             if not nyear or nyear > 2000:
                 print year, " ::: ", nyear
+
+    print normalize_year("12l7")
 
 
 
