@@ -37,3 +37,6 @@ if __name__ == "__main__":
         target = source.rsplit(".xml", 1)[0] + ".db"
 
     parse_xml_to_SQLite(source, target)
+
+
+    
