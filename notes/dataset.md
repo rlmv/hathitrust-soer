@@ -33,6 +33,15 @@ Together, these translate to a literal file structure
 
 Given an identifier we can quickly find a file in the pairtree structure by computing the directory division, and given a file in the pairtree structure, we can quickly compute the file's id by traversing the directory tree. This leads to an efficient, platform independent, software independent (no database required!) way to store large collections. Of course there's more to the specification than what I've described; you can read all the details [here][pairtree spec]. 
 
+The HathiTrust pairtree hierarchy is constructed using each document's unique Volume Identifier. Some examples:
+    
+        dul1.ark:/13960/t02z1h737
+        uc2.ark:/13960/t9k35wv5v
+        mdp.39015024088448
+        yale.39002098632178
+
+The prefix before the '.' is the namespace for the institution that contributed the document. Each namespace is the root of a separate pairtree hierarchy in the dataset.
+
 There are a few Python packages for dealing with pairtree filestructures: The [Pairtree][Pairtree] module is extensive and handles mapping identifiers, creating, and reading to and from pairtree hierarchies. This is more functionalality than I need though, so I've opted to use [ptree][ptree], which just handles identifier mappings and leaves all other operations up to the programmer. 
 
 [pairtree spec]: http://tools.ietf.org/pdf/draft-kunze-pairtree-01.pdf
@@ -55,7 +64,7 @@ METS stands for Metadata Encoding and Transmission Standard, and is an XML schem
 
 MARC XML
 --------
-A copy of the MARC bibliographic records are provided for each document, both in the METS files and in a single concatenated 800Mb file. MARC is standard bibliographic data, detailing author, title, publisher, topic and other card-catalog information.
+A copy of the MARC bibliographic records are provided for each document, both in the METS files and in a single concatenated file for the entire dataset. MARC is standard bibliographic data, detailing author, title, publisher, topic and other card-catalog information.
 
 
 

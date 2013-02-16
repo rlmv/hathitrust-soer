@@ -6,7 +6,6 @@ import cStringIO
 import sqlite3 as sqlite
 from collections import Counter
 
-import pymarc
 from pymarc import parse_xml, parse_xml_to_array, XmlHandler, record_to_xml
 
 from pathfinder import PairTreePathFinder
@@ -83,7 +82,7 @@ class MarcSQLite(object):
 
     def select_record(self, htid):
         """ Select a pymarc.Record object from the database."""
-        1
+
         cur = self._execute('''SELECT record FROM records
                                    WHERE id = ?''', [htid])
         r = cur.fetchone()
@@ -123,7 +122,7 @@ class MarcSQLite(object):
 def parse_xml_string_to_record(xmlstring):
     """ Parse an xml string and return a pymarc.Record object. """
 
-    xml_io= cStringIO.StringIO(xmlstring)
+    xml_io = cStringIO.StringIO(xmlstring)
     record = parse_xml_to_array(xml_io)[0]
     return record
 
@@ -138,6 +137,10 @@ def get_id_from_record(record):
         htid = None
     return htid 
 
+
+## DB, XML ^^^
+##----------------------------------------------------------------------
+## analysis, mapping vvv
 
 """ 
 From http://www.loc.gov/marc/bibliographic/bd260.html:
@@ -170,7 +173,9 @@ Okay, here are some possibilities that we have to deal with:
     18 -19
     MDCCLXXIX.
     MDCCLXX-LXXXIX]
-    19 cm.
+
+    19 cm.        these get matched wrong
+    5682 [1921]    as does this...
 
 This new function covers the 2, 3, and 4 digit segmented cases.
 
@@ -194,12 +199,17 @@ def normalize_year(year_string):
         return None
     matches = YEAR_REGEX.findall(year_string)
    
-    normalized = []
-    for m in matches:
-        y = "{:0<4}".format(m) # ljust w/ 0s
-        normalized.append(int(y))
+    if not matches:
+        # l9l6 --> 1916
+        year_string = year_string.replace('l', '1')
+        matches = YEAR_REGEX.findall(year_string)
+        if not matches:
+            return None
 
-    return normalized[0] if normalized else None
+    y = max(matches, key=lambda x: len(x))
+    y = "{:0<4}".format(y) # ljust w/ 0s
+
+    return int(y)
 
 
 def normalize_subject(subj_string):
@@ -326,26 +336,35 @@ if __name__ == "__main__":
     #         print r.title()
     
 
-    l = ["Magnetic induction.", 
-         "Maine (Battleship) [from old catalog]",
-         '"Mallery, Garrick,"',
-         '"Mammoth cave, Ky. [from old catalog]"']
+    # l = ["Magnetic induction.", 
+    #      "Maine (Battleship) [from old catalog]",
+    #      '"Mallery, Garrick,"',
+    #      '"Mammoth cave, Ky. [from old catalog]"']
 
-    for x in l:
-        print normalize_subject(x)
+    # for x in l:
+    #     print normalize_subject(x)
 
-    l = [None, 
-        "186-?]", 
-        "[185-?]",
-        "[189?]",
-        "187?]", 
-        "1898", 
-        "184[5?]", 
-        "[186-]]",
-        "18 -19", 
-        "1"]
+    # l = [None, 
+    #     "186-?]", 
+    #     "[185-?]",
+    #     "[189?]",
+    #     "187?]", 
+    #     "1898", 
+    #     "184[5?]", 
+    #     "[186-]]",
+    #     "18 -19", 
+    #     "1"]
 
-    for i in l:
-        print i, normalize_year(i)
+    # for i in l:
+    #     print i, normalize_year(i)
+
+    with MarcSQLite('results/non_google.20111101_01.db') as db:
+        for r in db.get_all_records():
+            year = r.pubyear()
+            nyear = normalize_year(year)
+            if not nyear or nyear > 2000:
+                print year, " ::: ", nyear
+
+
 
 
