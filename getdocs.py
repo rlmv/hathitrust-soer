@@ -7,8 +7,9 @@ from string import replace
 
 from requests.exceptions import RequestException
 
-from dataclient.htdataclient import HTDataClient as HTDC  
+from hathitrust_api import DataAPI
 from oauth_keys import client_key, client_secret
+
 
 if __name__ == "__main__":
 
@@ -21,14 +22,14 @@ if __name__ == "__main__":
     if not os.path.exists(args.targetdir):
         raise Exception("Target directory does not exist.")
 
-    htdc = HTDC(client_key, client_secret)
+    dataresource = DataAPI(client_key, client_secret)
 
     try:
         while True:
             s = raw_input("Enter target htid >> ")
 
             try:
-                r = htdc.getaggregate(s)
+                r = dataresource.getaggregate(s)
             except RequestException as re:
                 print "Error with request: {}".format(re)
                 continue    
