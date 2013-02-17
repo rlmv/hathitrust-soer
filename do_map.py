@@ -16,13 +16,20 @@ def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
         db - open record database
         file_stub - write serialized results here, in 
             .json and .csv formats. 
+        ids - an iterable of HathiTrust ids to map over. If None, all 
+            records in the database are retrieved.
         sort_by_value - default: False --> sort by key
     """
 
     json_fname = file_stub + ".json"
     csv_fname = file_stub + ".csv"
 
-    mapped = func(db.get_all_records())
+    if not ids:
+        records = db.get_all_records()
+    else:
+        records = db.get_records(ids)
+
+    mapped = func(records)
 
     with open(json_fname, 'w') as f:
         json.dump(mapped, f)
@@ -45,7 +52,11 @@ if __name__ == "__main__":
 
     with MarcSQLite(dbname) as db:
 
-        map_onto_records(map_publication_years, db, years_fname)
+        with open('results/non_google_nz.txt', 'r') as f:
+            htids = f.readlines()
+        years_fname = 'results/non_google_nz_years'
+
+        map_onto_records(map_publication_years, db, years_fname, ids=htids)
         #map_onto_records(map_subjects, db, subj_fname)
         
 
