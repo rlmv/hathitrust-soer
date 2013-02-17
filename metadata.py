@@ -101,6 +101,15 @@ class MarcSQLite(object):
             yield x[0]
 
 
+    def get_records(self, ids):
+        """ Return an iterator over the records cooresponding to ids.
+
+            If an id is not in the database, return None. """
+        for htid in ids:
+            r = select_record(htid)
+            yield r
+
+
     def get_all_records(self):
         """ Return an iterator over all records in the database."""
 

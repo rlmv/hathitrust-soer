@@ -9,7 +9,7 @@ from metadata import map_subjects, map_publication_years, MarcSQLite
 DB_STUB = 'non_google.20111101_01'
 #---------------------------------
 
-def map_onto_records(func, db, file_stub, sort_by_value=False):
+def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
     """ Run a mapping over the metadata db.
 
         func - should return a dictionary
