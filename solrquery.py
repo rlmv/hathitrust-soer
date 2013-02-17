@@ -6,7 +6,7 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from solrproxy import iterquery, getnumfound, \
+from hathitrust_api.solrproxy import iterquery, getnumfound, \
         getallids, getmarc, batch_ids
 
 
