@@ -1,7 +1,7 @@
 
 import json
 
-from utils import UnicodeWriter
+from util import UnicodeWriter
 from metadata import map_subjects, map_publication_years, MarcSQLite
 
 
