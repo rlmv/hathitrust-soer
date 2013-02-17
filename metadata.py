@@ -70,7 +70,7 @@ class MarcSQLite(object):
 
 
     def insert_record(self, record):
-        """ Insert a serialize xml representation of the pymarc record
+        """ Insert a xml representation of the pymarc record
             into the database, keyed by id """
         htid = get_id_from_record(record)
         print htid
@@ -243,9 +243,6 @@ def map_publication_years(records):
     for r in records:
         year = r.pubyear()
         norm_year = normalize_year(year)
-        if not norm_year:
-            print year
-
         mapping[norm_year] += 1
 
     return mapping
@@ -360,12 +357,15 @@ if __name__ == "__main__":
 
     with MarcSQLite('results/non_google.20111101_01.db') as db:
         for r in db.get_all_records():
-            year = r.pubyear()
-            nyear = normalize_year(year)
-            if not nyear or nyear > 2000:
-                print year, " ::: ", nyear
+            # year = r.pubyear()
+            # nyear = normalize_year(year)
+            # if not nyear or nyear > 2000:
+            #     print year, " ::: ", nyear
 
-    print normalize_year("12l7")
+            if r['655']:
+                print r['655']['a']
+
+
 
 
 

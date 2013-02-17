@@ -1,0 +1,3 @@
+[submodule "hathitrust_api"]
+	path = hathitrust_api
+	url = https://github.com/rlmv/hathitrust-api.git

@@ -73,7 +73,6 @@ class UnicodeWriter:
 
 if __name__ == "__main__":
 
-    print "HIHI"
     dbname = DB_STUB + ".db"
     subj_fname = DB_STUB + "_subjects"
     years_fname = DB_STUB + "_years"

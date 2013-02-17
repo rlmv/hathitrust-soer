@@ -1,4 +1,4 @@
-For the past few weeks I've been working with the HathiTrust's 300,000 document non-Google digitized public domain collection. It's easy enough to get your hands on the dataset; it is, after all, public domain and as such has no access restrictions--all it takes is a quick email to HathiTrust. They prefer to distribute the collection via [rsync][rsnyc], and once your IP address is authorized on their server you're good to go. (Rsync is interesting in and of itself--it provides efficient file transfers and updates, and allows interrupted sessions to be completed without resending all data. The algorithm is actually quite clever and fairly simple; if you're interested, the paper is [here][rsync algo])
+For the past few weeks I've been working with the HathiTrust's 300,000 document non-Google digitized public domain collection. It's easy enough to get your hands on the dataset; it is, after all, public domain and as such has no access restrictions--all it takes is a quick email to HathiTrust. They prefer to distribute the collection via [rsync][rsync], and once your IP address is authorized on their server you're good to go. (Rsync is interesting in and of itself--it provides efficient file transfers and updates, and allows interrupted sessions to be completed without resending all data. The algorithm is actually quite clever and fairly simple; if you're interested, the paper is [here][rsync algo])
 
 [rsync]: http://rsync.samba.org/
 [rsync algo]: http://cs.anu.edu.au/techreports/1996/TR-CS-96-05.pdf
@@ -9,7 +9,7 @@ The non-Google public domain collection is about 200Gb, so not a trivial amount 
 
 Pairtree structure
 ------------------
-HathiTrust structures its datasets in a pairtree file hierarchy, which specifies a mapping of indentifiers onto native directory trees. Typical filesystems do not handle large numbers of files in a single directory well; depending on the platform, searching can become very ineffiecient. The pairtree heirarchy mitigates this by balancing the depth and width of the directory structure as follows: Suppose we have a file identifier, e.g. `t1zc80f9r`. We split the id into consecutive pairs, and assign each pair to a level in the directory hierarchy
+HathiTrust structures its datasets in a pairtree file hierarchy, which specifies a mapping of indentifiers onto native directory trees. Typical filesystems do not handle large numbers of files in a single directory well; depending on the platform, searching can become very ineffiecient. The pairtree heirarchy mitigates this by balancing the depth and width of the directory structure as follows: Suppose we have a file identifier, e.g. `t1zc80f9`. We split the id into consecutive pairs, and assign each pair to a level in the directory hierarchy
 
     t1zc80f9 --> t1/zc/80/f9/
 
