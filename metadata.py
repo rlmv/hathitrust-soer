@@ -106,7 +106,7 @@ class MarcSQLite(object):
 
             If an id is not in the database, return None. """
         for htid in ids:
-            r = select_record(htid)
+            r = self.select_record(htid)
             yield r
 
 

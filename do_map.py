@@ -1,12 +1,13 @@
 
 import json
+import csv
 
 from util import UnicodeWriter
 from metadata import map_subjects, map_publication_years, MarcSQLite
 
 
 #-----change this as needed-------
-DB_STUB = 'non_google.20111101_01'
+DB_STUB = 'results/non_google.20111101_01'
 #---------------------------------
 
 def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
@@ -27,7 +28,9 @@ def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
     if not ids:
         records = db.get_all_records()
     else:
-        records = db.get_records(ids)
+        ids = map(lambda x: x.strip(), ids) #? need this??
+        records = db.get_records(ids) 
+        records = filter(lambda x: x, records) # discard Nones..
 
     mapped = func(records)
 
