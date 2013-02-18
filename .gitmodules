@@ -1,7 +1,7 @@
 [submodule "hathitrust_api"]
 	path = hathitrust_api
 	url = https://github.com/rlmv/hathitrust-api.git
-[submodule "remove-running-headers"]
+[submodule "remove_running_headers"]
 	path = remove_running_headers
 	url = https://github.com/rlmv/remove-running-headers.git
 [submodule "ocreval"]
