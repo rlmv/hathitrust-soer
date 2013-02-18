@@ -26,7 +26,7 @@ if __name__ == "__main__":
     parser.add_argument('ID_FILE', 
                         nargs='?', 
                         default=False, 
-                        help='file of HathiTrust ids to collate; defualts to the entire collection')
+                        help='file of HathiTrust ids to collate; defaults to the entire collection')
     parser.add_argument('--rewrite-existing',
                         action='store_true',  
                         help='Overwrite existing collated documents.')
