@@ -4,6 +4,4 @@
 [submodule "ocreval"]
 	path = ocreval
 	url = https://github.com/rlmv/ocreval.git
-[submodule "remove_running_headers"]
-	path = remove_running_headers
-	url = https://github.com/rlmv/remove-running-headers.git
+
