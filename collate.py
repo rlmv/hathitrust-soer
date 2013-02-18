@@ -7,12 +7,11 @@ from remove_running_headers.bigcollate import bigcollate
 
 class VersionError(Exception): pass
 
-def file_iter(fname, mode='r'):
+def file_id_iter(fname, mode='r'):
     """ Iterator over stripped lines in a file."""
     with open(fname, mode) as f:
         for line in f:
             yield line.strip()
-
 
 if __name__ == "__main__":
 
@@ -45,7 +44,7 @@ if __name__ == "__main__":
         # default identifier in collection
         id_file = os.path.join(collection, 'id')
         
-    ids = file_iter(id_file)
+    ids = file_id_iter(id_file)
     bigcollate(ids, collection, rewrite_existing=rewrite_existing, 
         include_divs=include_divs)
 

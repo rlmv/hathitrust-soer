@@ -1,16 +1,16 @@
 
 import json
 import csv
+import os
+import argparse
+import sys
 
-from util import UnicodeWriter
+from util import UnicodeWriter, file_id_iter
 from metadata import map_subjects, map_publication_years, MarcSQLite
 
 
-#-----change this as needed-------
-DB_STUB = 'results/non_google.20111101_01'
-#---------------------------------
-
-def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
+def map_onto_records(func, db, csv_fname, json_fname=None, 
+                ids=None, sort_by_value=False):
     """ Run a mapping over the metadata db.
 
         func - should return a dictionary
@@ -22,23 +22,19 @@ def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
         sort_by_value - default: False --> sort by key
     """
 
-    json_fname = file_stub + ".json"
-    csv_fname = file_stub + ".csv"
-
     if not ids:
         records = db.get_all_records()
     else:
-        ids = map(lambda x: x.strip(), ids) #? need this??
         records = db.get_records(ids) 
         records = filter(lambda x: x, records) # discard Nones..
 
     mapped = func(records)
 
-    with open(json_fname, 'w') as f:
-        json.dump(mapped, f)
+    if json_fname:
+        with open(json_fname, 'w') as f:
+            json.dump(mapped, f)
 
     f = lambda x: x[1 if sort_by_value else 0]
-
     mapped_list = sorted(mapped.items(), key=f)
 
     with open(csv_fname, 'w') as f:
@@ -49,18 +45,45 @@ def map_onto_records(func, db, file_stub, ids=None, sort_by_value=False):
 
 if __name__ == "__main__":
 
-    dbname = DB_STUB + ".db"
-    subj_fname = DB_STUB + "_subjects"
-    years_fname = DB_STUB + "_years"
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("MAPPING", 
+        choices=['years', 'subjects'], 
+        help="type of mapping to perform")
+    parser.add_argument("DATABASE", 
+        help="MarcSQLite record database from which to pull records")
+    parser.add_argument("CSV_OUT", 
+        help="file to which to write CSV output")
+    parser.add_argument("--json", "-j", 
+        metavar="JSON_OUT",
+        dest="JSON_OUT",
+        help="output a JSON result file in addition the the default csv file")
+    parser.add_argument("--id-file", "-i", 
+        metavar="ID_FILE", 
+        dest="ID_FILE", 
+        help="map over the ids contained in ID_FILE, rather than the entire database")
 
-    with MarcSQLite(dbname) as db:
+    args = parser.parse_args()
 
-        with open('results/non_google_nz.txt', 'r') as f:
-            htids = f.readlines()
-        years_fname = 'results/non_google_nz_years'
+    if not os.path.exists(args.DATABASE):
+        print "database {} does not exist".format(args.DATABASE)
+        sys.exit()
 
-        map_onto_records(map_publication_years, db, years_fname, ids=htids)
-        #map_onto_records(map_subjects, db, subj_fname)
+    with MarcSQLite(args.DATABASE) as db:
+
+        if args.ID_FILE:
+            ids = file_id_iter(args.ID_FILE)
+        else:
+            ids = None
+
+        if args.MAPPING == 'years':
+            mapper = map_publication_years
+        elif args.MAPPING == 'subjects':
+            mapper = map_subjects
+
+        map_onto_records(mapper, db, args.CSV_OUT, json_fname=args.JSON_OUT, 
+            ids=ids)
+
+
         
 
 
