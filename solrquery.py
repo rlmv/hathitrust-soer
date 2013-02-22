@@ -18,7 +18,7 @@ def main(args):
     # ToDo: refactor...
     
     parser = argparse.ArgumentParser(
-                        description="This is a command line tool for the HTRC Solr Proxy.")
+                        description="A command line tool for the HTRC Solr Proxy.")
     
     parser.add_argument('querystring',
                         metavar='QUERY',
@@ -32,15 +32,15 @@ def main(args):
     parser.add_argument('-o', '--outfile',
                         default=sys.stdout,
                         type=argparse.FileType('w'),
-                        help='write output to this file')
+                        help='optional output file')
     
     parser.add_argument('-n', '--numfound',
                         action='store_true',
-                        help='list the total number of results returned by this query')
+                        help='number of results matching QUERY')
     
     parser.add_argument('-i', '--ids',
                         action='store_true',
-                        help='output a stream of document ids')
+                        help='return documents identifiers only')
     
     parser.add_argument('-m', '--marc',
                         type=lambda x: ZipFile(x, 'w'),

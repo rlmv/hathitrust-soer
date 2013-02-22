@@ -1,8 +1,12 @@
-
+from __future__ import absolute_import
 
 import os
 
-import ptree
+try:
+    from . import ptree
+except ValueError:
+    import ptree
+
 
 
 class PairTreePathFinder(object):
@@ -63,6 +67,6 @@ class PairTreePathFinder(object):
 if __name__ == "__main__":
 
     pf = PairTreePathFinder("/Volumes/home/bo.marchman/non_google")
-    print pf.get_path_to_htid('dul1.ark:/13960/t00z7x54f')
+    print(pf.get_path_to_htid('dul1.ark:/13960/t00z7x54f'))
 
 

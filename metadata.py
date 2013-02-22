@@ -172,7 +172,7 @@ Okay, here are some possibilities that we have to deal with:
     187?]
     184[5?]
     [186-]
-    c19 --- is the 19th century, or a misinterpretaion of 260$c19 ?
+    c19         -- is the 19th century, or a misinterpretaion of 260$c19 ?
     cl9l6]
     M. D. LXXIII.
     M. D. LXVIII.
