@@ -6,8 +6,7 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from hathitrust_api.solrproxy import iterquery, getnumfound, \
-        getallids, getmarc, batch_ids
+from hathitrust_api.solr_api import SolrAPI
 
 
 def main(args):
@@ -54,19 +53,21 @@ def main(args):
     
     args = parser.parse_args(args)
     outfile = args.outfile
+
+    solr = SolrAPI()
     
     try: 
         if args.numfound:
-            numfound = getnumfound(args.querystring)
+            numfound = solr.getnumfound(args.querystring)
             outfile.write("{}\n".format(numfound))
         
         elif args.ids:
-            for doc_id in getallids(args.querystring):
+            for doc_id in solr.getallids(args.querystring):
                 outfile.write("{}\n".format(doc_id))
                 
         elif args.marc:
             marcfile = args.marc
-            for doc_ids in batch_ids(args.querystring):
+            for doc_ids in solr.batch_ids(args.querystring):
                 marcs = getmarc(doc_ids)
                 # there's probably a faster way to merge multiple zip
                 # files together...
@@ -79,7 +80,7 @@ def main(args):
             _first = True # need to wrangle with the formatting...
             outfile.write('{ "results" : [\n')
             
-            for doc in iterquery(args.querystring, fields=args.fields):    
+            for doc in solr.iterquery(args.querystring, fields=args.fields):    
                 if _first:
                     _first = not _first
                 else:
