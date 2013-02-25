@@ -139,7 +139,7 @@ def parse_xml_string_to_record(xmlstring):
 def get_id_from_record(record):
     """ Extract the HathiTrust id from a pymarc record.
 
-        Return None if no record."""
+        Return None if no id."""
     try:
         htid = record['974']['a']
     except TypeError:
