@@ -1,0 +1,1 @@
+rsync --partial --progress --include='*.zip' --exclude='*.txt' --exclude='*.meta' --delete --ignore-errors --ignore-existing --verbose --copy-links --recursive --times  /Volumes/ELEMENTS/non_google/uc2 /Volumes/home/bo.marchman/non_google/

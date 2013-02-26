@@ -15,4 +15,4 @@
 * requests-oauthlib
 * sklearn
 * pymarc
-* lxml
+* ptree
