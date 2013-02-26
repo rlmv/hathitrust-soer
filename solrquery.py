@@ -6,7 +6,7 @@ import argparse
 from cStringIO import StringIO
 from zipfile import ZipFile
 
-from hathitrust_api.solr_api import SolrAPI
+from hathitrust_api import SolrAPI
 
 
 def main(args):
