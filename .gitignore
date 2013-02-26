@@ -1,1 +1,2 @@
-metadata.pyc oauth_keys.pyc pathfinder.pyc
+
+*.py[cod]
