@@ -7,7 +7,6 @@ from util import file_id_iter, require_py3
 from remove_running_headers.bigcollate import bigcollate
 
 
-
 if __name__ == "__main__":
 
     require_py3()
