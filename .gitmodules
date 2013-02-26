@@ -7,3 +7,6 @@
 [submodule "remove_running_headers"]
 	path = remove_running_headers
 	url = https://github.com/rlmv/remove-running-headers.git
+[submodule "pairtree/ptree"]
+	path = pairtree/ptree
+	url = https://github.com/rlmv/ptree.git

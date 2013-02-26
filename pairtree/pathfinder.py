@@ -3,10 +3,10 @@ from __future__ import absolute_import
 import os
 
 try:
-    from . import ptree
-except ValueError:
     import ptree
-
+except ValueError:
+    # python3 issues...
+    from .ptree import ptree
 
 
 class PairTreePathFinder(object):
