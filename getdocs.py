@@ -12,7 +12,7 @@ from hathitrust_api import DataAPI
 try:
     from oauth_keys import client_key, client_secret
 except ImportError:
-    raise ImportError("No OAuth keys found. \n" 
+    raise ImportError("No OAuth keys found.\n" 
         "You need to acquire OAuth keys and set up an oauth_keys.py file.\n"
         "See oauth_keys.py.template for an example.")
 
