@@ -26,6 +26,10 @@ if __name__ == "__main__":
     parser.add_argument('--no-divs', 
                         action='store_true', 
                         help='If present, do not write page or header divisions to the collation.')
+    parser.add_argument('--skip', 
+                        type=int,
+                        default=0,
+                        help='Number of lines in the id file to skip; eg after an interrupted collate.')
     args = parser.parse_args()
     
     collection = args.COLLECTION
@@ -38,9 +42,12 @@ if __name__ == "__main__":
         id_file = os.path.join(collection, 'id')
         
     ids = file_id_iter(id_file)
-    bigcollate(ids, collection, rewrite_existing=rewrite_existing, 
-        include_divs=include_divs)
+    print(bigcollate(ids, collection, rewrite_existing=rewrite_existing, 
+        include_divs=include_divs, skip=args.skip))
 
+
+
+os.path.join(os.path.expanduser("~"), ".collate_resume")
 
 
 
