@@ -68,7 +68,7 @@ def main(args):
         elif args.marc:
             marcfile = args.marc
             for doc_ids in solr.batch_ids(args.querystring):
-                marcs = getmarc(doc_ids)
+                marcs = solr.getmarc(doc_ids)
                 # there's probably a faster way to merge multiple zip
                 # files together...
                 with ZipFile(StringIO(marcs)) as z:
