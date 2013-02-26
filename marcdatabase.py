@@ -1,7 +1,7 @@
 
 import argparse
 
-from metadata import parse_xml_to_SQLite
+from marc import parse_xml_to_SQLite
 
 
 """ 

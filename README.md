@@ -2,8 +2,9 @@
 
 ##Modules:
 * solrquery.py
-* build_db_from_xml.py
-* collate.py - Warning! here be dragons! (aka Python3.)
+* marcdatabase.py
+* collate.py (*Py3*)
+* ocreval.py (*Py3)
 
 
 ##Packages

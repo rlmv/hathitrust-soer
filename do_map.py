@@ -1,12 +1,11 @@
 
 import json
-import csv
 import os
 import argparse
 import sys
 
 from util import UnicodeWriter, file_id_iter
-from metadata import map_subjects, map_publication_years, MarcSQLite
+from marc import map_subjects, map_publication_years, MarcSQLite
 
 
 def map_onto_records(func, db, csv_fname, json_fname=None, 
