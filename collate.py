@@ -3,20 +3,14 @@ import argparse
 import sys
 import os
 
+from util import file_id_iter, require_py3
 from remove_running_headers.bigcollate import bigcollate
 
-class VersionError(Exception): pass
 
-def file_id_iter(fname, mode='r'):
-    """ Iterator over stripped lines in a file."""
-    with open(fname, mode) as f:
-        for line in f:
-            yield line.strip()
 
 if __name__ == "__main__":
 
-    if sys.version_info[0] != 3:
-        raise VersionError("requires Python 3")
+    require_py3()
 
     parser = argparse.ArgumentParser(description="A command line wrapper \
         around Ted Underwood's collation package.")
