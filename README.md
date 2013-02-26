@@ -1,6 +1,7 @@
 
 
 ##Modules:
+* getdocs.py
 * solrquery.py
 * marcdatabase.py
 * collate.py (*Py3*)
