@@ -1,9 +1,11 @@
 
 
 ###Modules:
-* _getdocs.py_
+* `getdocs.py`
 
 	An example tool built using the [hathitrust-api][ht api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
+	
+	Usage:
 
 		python getdocs.py [-h] TARGETDIR [IDFILE]
 
@@ -11,11 +13,11 @@
 
 	With `IDFILE`:
 		
-		python getdocs.py ./ target_ids.txt
+		python getdocs.py . target_ids.txt
 		
 	Interactive:
 		
-		python getdocs.py ./ 
+		python getdocs.py .
 
 		Enter target htid >> dul1.ark:/13960/t0000xw9z
 		loc.ark+=13960=t01z49n4f.zip saved to .
@@ -24,6 +26,8 @@
 
 
 * _solrquery.py_
+
+	Another example using the [hathitrust-api][ht api] Solr API, which is much more useful than th
 	
 	Another example 
 * _marcdatabase.py_

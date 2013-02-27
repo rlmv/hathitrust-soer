@@ -16,8 +16,6 @@ def has_reference(record):
             pass
     return False
 
-
-       
     
 if __name__ == "__main__":
 
