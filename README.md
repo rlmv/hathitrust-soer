@@ -1,9 +1,11 @@
 
 
 ###Modules:
-* __getdocs.py__
 
-	An example tool built using the [hathitrust-api][ht api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
+
+* ##### getdocs.py
+
+	An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
 	
 	Usage:
 
@@ -25,25 +27,80 @@
 		Enter target htid >>
 
 
-* _solrquery.py_
+* ##### solrquery.py
 
-	Another example using the [hathitrust-api][ht api] Solr API, which is much more useful than th
+	A more useful example using the [hathitrust-api][ht api] Solr API, `solrquery.py` is a command line interface with the HTRC's Solr index, allowing document searches and MARC retrieval.
 	
-	Another example 
-* _marcdatabase.py_
-* map.py
-* identify.py
-* collate.py (*Py3*)
-* ocreval.py (*Py3*)
+	Usage:
+		
+		python solrquery.py [-h] [-f [FIELD [FIELD ...]]] [-o OUTFILE] [-n] [-i]
+                    	  	[-m MARCFILE]
+                          	QUERY
 
-[ht api]: github.com/rlmv/hathitrust-api
+		positional arguments:
+ 		QUERY          		a Solr query string
 
-####Included submodules: 
+		optional arguments:
+ 		-h, --help           show this help message and exit
+  		-f [FIELD [FIELD ...]], --fields [FIELD [FIELD ...]]
+                        	 fields to include with the results
+  		-o OUTFILE, --outfile OUTFILE
+                        	 optional output file
+ 		-n, --numfound       number of results matching QUERY
+  		-i, --ids            return documents identifiers only
+  		-m MARCFILE, --marc MARCFILE
+                        	 retrieve MARC records and write to zip file
+	
+	Examples:
+	
+		
+
+
+	
+
+	
+* ##### marcdatabase.py
+
+	Tool for converting a large HathiTrust XML file to a managable SQLite database format, accessible through the class `marc.MarcSQLite`.
+
+* ##### map.py
+
+	Various analysis functions over the records in a MarcSQLite database.
+
+* ##### identify.py
+	
+	Tool for identifying documents in a MarcSQLite database via metadata features and keywords.
+
+* ##### collate.py (\*Py3*)
+	
+	A command line wrapper around Ted Underwood's document collation package.
+
+* ##### ocreval.py (\*Py3*)
+	
+	Command line version of Ted Underwood's ocrevaluation package.
 
 
 ####Dependencies:
-* requests
-* requests-oauthlib
-* sklearn
-* pymarc
-* ptree
+Code in this package depends on these third party libraries:
+
+* [requests]
+* [requests-oauthlib]
+* [ptree]
+* [pymarc]
+
+They should all be installable with a `pip <dependency>` command. There may still be an issue with the requests-oauthlib version in PyPI. If you have issues using `hathitrust_api.DataAPI`, install it from the [source][requests-oauthlib].
+
+####Submodules: 
+Due to issues involving Python 3, and needing to hack into some existing code, I've included several packages as submodules to ease the pain of setting up a bunch of dependencies. If you do a `git clone`, these will all be included without any extra work:
+
+* [hathitrust-api]
+* [remove-running-headers]
+* [ocreval]
+	
+[requests]: docs.python-requests.org/en/latest/
+[requests-oauthlib]: github.com/requests/requests-oauthlib
+[ptree]: github.com/edsu/ptree
+[pymarc]: github.com/edsu/pymarc
+[hathitrust-api]: github.com/rlmv/hathitrust-api
+[remove-running-headers]: github.com/rlmv/remove-running-headers
+[ocreval]: ithub.com/rlmv/ocreval
