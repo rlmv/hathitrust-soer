@@ -29,6 +29,7 @@ def get_data_and_write(htid, target_dir, data_resource):
         fpath = os.path.join(target_dir, fname)
         with open(fpath, 'w') as f:
             f.write(r)
+        print "{} saved to {}".format(fname, target_dir)
 
     except RequestException as re:
         print "Error with request: {}".format(re)
@@ -37,7 +38,7 @@ def get_data_and_write(htid, target_dir, data_resource):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="An interactive document retriever for the HathiTrust data API.")
+        description="An interactive document retriever for the HathiTrust Data API.")
     parser.add_argument('targetdir', metavar='TARGETDIR',
         help="Retrieved files are stored in this directory.")
     parser.add_argument('id_file', metavar='IDFILE',
@@ -60,7 +61,7 @@ if __name__ == "__main__":
 
         else: # ineractive
             while True:
-                s = raw_input("Enter target htid >> ")         
+                s = raw_input("\nEnter target htid >> ")     
                 get_data_and_write(s, args.targetdir, dataresource)
 
     except KeyboardInterrupt:
