@@ -17,16 +17,19 @@ def has_reference(record):
     return False
 
 
+       
+    
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('MARCDB',
                         help='MarcSQLite database from which to retrieve records.')
+    parser.add_argument('OUTFILE', 
+                        help='File to write output to.')
     parser.add_argument('TERM',
                         nargs='+',
                         help='Terms signalling positive identification.')
-    parser.add_argument('--out', 
-                        help='Optional file to write output to.')
+    
 
     args = parser.parse_args()
 
@@ -34,11 +37,10 @@ if __name__ == "__main__":
 
     m = MarcSQLite(args.MARCDB)
 
-    with open(args.out, 'w') as f_id:
-
+    with open(args.OUTFILE, 'w') as outfile:
         with m:
             for r in m.get_all_records():
                 if has_reference(r):
                     id_ = get_id_from_record(r)
                     print id_
-                    f_id.write("{}\n".format(id_))
+                    outfile.write("{}\n".format(id_))
