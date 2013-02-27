@@ -1,7 +1,7 @@
 
 
 ###Modules:
-* `getdocs.py`
+* __getdocs.py__
 
 	An example tool built using the [hathitrust-api][ht api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
 	
