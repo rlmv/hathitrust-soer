@@ -1,9 +1,9 @@
 
 
-### Modules:
+### Command line tools:
 
 
-* ##### `getdocs.py`
+##### `getdocs.py`
 
 	An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
 	
@@ -27,7 +27,7 @@
 		Enter target htid >>
 
 
-* ##### solrquery.py
+##### `solrquery.py`
 
 	A more useful example using the [hathitrust-api][ht api] Solr API, `solrquery.py` is a command line interface with the HTRC's Solr index, allowing document searches and MARC retrieval.
 	
@@ -55,24 +55,57 @@
                             Retrieve MARC records for all documents matching QUERY
                             and write a zip archive to MARCFILE.
     ```
-	
-	Examples:
-	
-		
 
 
 	
-
-	
-* ##### marcdatabase.py
+##### `marcdatabase.py`
 
 	Tool for converting a large HathiTrust XML file to a managable SQLite database format, accessible through the class `marc.MarcSQLite`.
 
-* ##### analyze.py
+    Usage:
+
+    ```
+    python marcdatabase.py [-h] SOURCE_XML TARGET_DB
+
+    Command line tool to parse a HathiTrust MarcXML file into a SQLite database.
+
+    positional arguments:
+      SOURCE_XML  A multi-record MarcXML file.
+      TARGET_DB   Name of database to create.
+
+    optional arguments:
+      -h, --help  show this help message and exit
+    ```
+
+
+
+##### `analyze.py`
 
 	Various analysis functions over the records in a MarcSQLite database.
 
-* ##### identify.py
+    ```
+    python analyze.py [-h] [--json JSON_OUT] [--id-file ID_FILE]
+                  {years,subjects} DATABASE CSV_OUT
+
+    positional arguments:
+      {years,subjects}      Type of analysis to perform/information to extract.
+                            'years' tallies the publication years of all
+                            documents. 'subjects' accumulates the subjects of the
+                            documents.
+      DATABASE              MarcSQLite record database from which to pull records.
+      CSV_OUT               File for writing CSV output.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --json JSON_OUT, -j JSON_OUT
+                            Output a JSON result file in addition the the default
+                            csv file.
+      --id-file ID_FILE, -i ID_FILE
+                            Analyze the ids contained in ID_FILE rather than the
+                            entire database.
+    ```
+
+##### `identify.py`
 	
 	Tool for identifying documents in a MarcSQLite database via metadata features and keywords.
 
@@ -94,16 +127,16 @@
     ```
 
 
-* ##### collate.py (\*Py3*)
+##### `collate.py` (\*Py3*)
 	
 	A command line wrapper around Ted Underwood's document collation package.
 
-* ##### ocreval.py (\*Py3*)
+##### `ocreval.py` (\*Py3*)
 	
 	Command line version of Ted Underwood's ocrevaluation package.
 
 
-####Dependencies:
+#### Dependencies:
 Code in this package depends on these third party libraries:
 
 * [requests]
