@@ -1,22 +1,10 @@
 
-import cStringIO
 import sqlite3 as sqlite
+import cStringIO
 
 from pymarc import parse_xml_to_array
 
 from records import get_id_from_record
-
-
-def parse_xml_to_SQLite(xml_file, sqlite_name, strict=False, normalize_form=None):
-    """ Parse a single file collection of xml metadata, and
-        store it in a SQLite database. 
-
-        This is function to use if you are trying to convert a 
-        HathiTrust dataset file into a managable format."""
-
-    handler = SQLiteXmlHandler(sqlite_name, strict, normalize_form)
-    parse_xml(xml_file, handler)
-
 
 class MarcSQLite(object):
     """ SQLite wrapper for storing pymarc.Record objects."""
@@ -103,3 +91,4 @@ def parse_xml_string_to_record(xmlstring):
     xml_io = cStringIO.StringIO(xmlstring)
     record = parse_xml_to_array(xml_io)[0]
     return record
+
