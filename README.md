@@ -1,6 +1,6 @@
 
 
-### Command line tools:
+## Command line tools:
 
 
 ##### `getdocs.py`
@@ -9,7 +9,18 @@ An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust
 
 Usage:
 
-	python getdocs.py [-h] TARGETDIR [IDFILE]
+```
+python getdocs.py [-h] TARGETDIR [IDFILE]
+
+An interactive document retriever for the HathiTrust Data API.
+
+positional arguments:
+  TARGETDIR   Retrieved files are stored in this directory.
+  IDFILE      Path to a file of HathiTrust identifiers.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
 
 `TARGETDIR` specifies the directory into which to save downloaded resources. `IDFILE` is an optional argument, specifying the path to a file containing HathiTrust document identifiers, one per line. If `IDFILE` is not specified the program runs under an interactive prompt.
 
@@ -127,17 +138,68 @@ optional arguments:
 ```
 
 
-##### `collate.py` (\*Py3*)
+##### `collate.py` (Python 3!)
 
-A command line wrapper around Ted Underwood's document collation package.
+A command line wrapper around Ted Underwood's document collation scripts.
 
-##### `ocreval.py` (\*Py3*)
+Usage:
 
-Command line version of Ted Underwood's ocrevaluation package.
+```
+python3 collate.py [-h] [--rewrite-existing] [--no-divs] [--skip SKIP]
+                  COLLECTION [ID_FILE]
+
+A command line wrapper around Ted Underwood's collation package.
+
+positional arguments:
+  COLLECTION          Specifies the root directory of a HathiTrust collection.
+  ID_FILE             File of HathiTrust ids to collate; defaults to the
+                      entire collection.
+
+optional arguments:
+  -h, --help          show this help message and exit
+  --rewrite-existing  Overwrite existing collated documents.
+  --no-divs           If specified, do not write page or header divisions to
+                      the collation.
+  --skip SKIP         Number of lines in the id file to skip; eg after an
+                      interrupted collate.
+```
+
+##### `ocreval.py` (Python 3!)
+
+Command line version of Ted Underwood's OCR evaluation scripts.
+
+Usage:
+
+```
+python3 ocreval.py [-h] COLLECTION OUTFILE [IDFILE]
+
+positional arguments:
+  COLLECTION  Path to a HathiTrust collection.
+  OUTFILE     Desination file for CSV output.
+  IDFILE      Optional file of HathiTrust identifiers to evaluate. Defaults to
+              the entire collection.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+
+## Classes and functions:
+Bits and pieces for working with HathiTrust MARC XML records. Check the docstrings for more usage information.
+
+###### marc.MarcSQLite  
+Class for storing HathiTrust MARC records in a SQLite database schema.
+###### marc.parse_xml_to_SQLite
+Main function for parsing a HathiTrust MARC record to a MarcSQLite accessible database.
+###### marc.normalize_year
+###### marc.normalize_subject
+###### marc.map_publication_years
+###### marc.map_subjects
+###### pairtree.PairTreePathFinder
 
 
 #### Dependencies:
-Code in this package depends on these third party libraries:
+Code in this package depends on the following third party libraries:
 
 * [requests]
 * [requests-oauthlib]
