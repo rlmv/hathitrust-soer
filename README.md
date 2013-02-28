@@ -215,10 +215,10 @@ Due to issues involving Python 3, and needing to hack into some existing code, I
 * [remove-running-headers]
 * [ocreval]
 	
-[requests]: docs.python-requests.org/en/latest/
-[requests-oauthlib]: github.com/requests/requests-oauthlib
-[ptree]: github.com/edsu/ptree
-[pymarc]: github.com/edsu/pymarc
-[hathitrust-api]: github.com/rlmv/hathitrust-api
-[remove-running-headers]: github.com/rlmv/remove-running-headers
-[ocreval]: ithub.com/rlmv/ocreval
+[requests]: http://docs.python-requests.org/en/latest/
+[requests-oauthlib]: http://github.com/requests/requests-oauthlib
+[ptree]: http://github.com/edsu/ptree
+[pymarc]: http://github.com/edsu/pymarc
+[hathitrust-api]: http://github.com/rlmv/hathitrust-api
+[remove-running-headers]: http://github.com/rlmv/remove-running-headers
+[ocreval]: http://github.com/rlmv/ocreval
