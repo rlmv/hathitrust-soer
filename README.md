@@ -5,135 +5,135 @@
 
 ##### `getdocs.py`
 
-	An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
+An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
+
+Usage:
+
+	python getdocs.py [-h] TARGETDIR [IDFILE]
+
+`TARGETDIR` specifies the directory into which to save downloaded resources. `IDFILE` is an optional argument, specifying the path to a file containing HathiTrust document identifiers, one per line. If `IDFILE` is not specified the program runs under an interactive prompt.
+
+With `IDFILE`:
 	
-	Usage:
+	python getdocs.py . target_ids.txt
+	
+Interactive:
+	
+	python getdocs.py .
 
-		python getdocs.py [-h] TARGETDIR [IDFILE]
+	Enter target htid >> dul1.ark:/13960/t0000xw9z
+	loc.ark+=13960=t01z49n4f.zip saved to .
 
-	`TARGETDIR` specifies the directory into which to save downloaded resources. `IDFILE` is an optional argument, specifying the path to a file containing HathiTrust document identifiers, one per line. If `IDFILE` is not specified the program runs under an interactive prompt.
-
-	With `IDFILE`:
-		
-		python getdocs.py . target_ids.txt
-		
-	Interactive:
-		
-		python getdocs.py .
-
-		Enter target htid >> dul1.ark:/13960/t0000xw9z
-		loc.ark+=13960=t01z49n4f.zip saved to .
-
-		Enter target htid >>
+	Enter target htid >>
 
 
 ##### `solrquery.py`
 
-	A more useful example using the [hathitrust-api][ht api] Solr API, `solrquery.py` is a command line interface with the HTRC's Solr index, allowing document searches and MARC retrieval.
-	
-	Usage:
-	```	
-	python solrquery.py [-h] [-f [FIELD [FIELD ...]]] [-o OUTFILE] [-n] [-i]
-                        [-m MARCFILE]
-                        QUERY
+A more useful example using the [hathitrust-api][ht api] Solr API, `solrquery.py` is a command line interface with the HTRC's Solr index, allowing document searches and MARC retrieval.
 
-    A command line tool for the HTRC Solr Proxy.
+Usage:
+```	
+python solrquery.py [-h] [-f [FIELD [FIELD ...]]] [-o OUTFILE] [-n] [-i]
+                    [-m MARCFILE]
+                    QUERY
 
-    positional arguments:
-      QUERY                 A Solr query string. See http://wiki.htrc.illinois.edu
-                            /display/COM/Solr+Proxy+API+User+Guide for details.
+A command line tool for the HTRC Solr Proxy.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -f [FIELD [FIELD ...]], --fields [FIELD [FIELD ...]]
-                            A subset of index fields to include with the results.
-      -o OUTFILE, --outfile OUTFILE
-                            Use --outfile to specify and optional output file.
-      -n, --numfound        Print the number of results matching QUERY.
-      -i, --ids             Return a stream of documents identifiers only.
-      -m MARCFILE, --marc MARCFILE
-                            Retrieve MARC records for all documents matching QUERY
-                            and write a zip archive to MARCFILE.
-    ```
+positional arguments:
+  QUERY                 A Solr query string. See http://wiki.htrc.illinois.edu
+                        /display/COM/Solr+Proxy+API+User+Guide for details.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f [FIELD [FIELD ...]], --fields [FIELD [FIELD ...]]
+                        A subset of index fields to include with the results.
+  -o OUTFILE, --outfile OUTFILE
+                        Use --outfile to specify and optional output file.
+  -n, --numfound        Print the number of results matching QUERY.
+  -i, --ids             Return a stream of documents identifiers only.
+  -m MARCFILE, --marc MARCFILE
+                        Retrieve MARC records for all documents matching QUERY
+                        and write a zip archive to MARCFILE.
+```
 
 
-	
+
 ##### `marcdatabase.py`
 
-	Tool for converting a large HathiTrust XML file to a managable SQLite database format, accessible through the class `marc.MarcSQLite`.
+Tool for converting a large HathiTrust XML file to a managable SQLite database format, accessible through the class `marc.MarcSQLite`.
 
-    Usage:
+Usage:
 
-    ```
-    python marcdatabase.py [-h] SOURCE_XML TARGET_DB
+```
+python marcdatabase.py [-h] SOURCE_XML TARGET_DB
 
-    Command line tool to parse a HathiTrust MarcXML file into a SQLite database.
+Command line tool to parse a HathiTrust MarcXML file into a SQLite database.
 
-    positional arguments:
-      SOURCE_XML  A multi-record MarcXML file.
-      TARGET_DB   Name of database to create.
+positional arguments:
+  SOURCE_XML  A multi-record MarcXML file.
+  TARGET_DB   Name of database to create.
 
-    optional arguments:
-      -h, --help  show this help message and exit
-    ```
+optional arguments:
+  -h, --help  show this help message and exit
+```
 
 
 
 ##### `analyze.py`
 
-	Various analysis functions over the records in a MarcSQLite database.
+Various analysis functions over the records in a MarcSQLite database.
 
-    ```
-    python analyze.py [-h] [--json JSON_OUT] [--id-file ID_FILE]
-                  {years,subjects} DATABASE CSV_OUT
+```
+python analyze.py [-h] [--json JSON_OUT] [--id-file ID_FILE]
+              {years,subjects} DATABASE CSV_OUT
 
-    positional arguments:
-      {years,subjects}      Type of analysis to perform/information to extract.
-                            'years' tallies the publication years of all
-                            documents. 'subjects' accumulates the subjects of the
-                            documents.
-      DATABASE              MarcSQLite record database from which to pull records.
-      CSV_OUT               File for writing CSV output.
+positional arguments:
+  {years,subjects}      Type of analysis to perform/information to extract.
+                        'years' tallies the publication years of all
+                        documents. 'subjects' accumulates the subjects of the
+                        documents.
+  DATABASE              MarcSQLite record database from which to pull records.
+  CSV_OUT               File for writing CSV output.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      --json JSON_OUT, -j JSON_OUT
-                            Output a JSON result file in addition the the default
-                            csv file.
-      --id-file ID_FILE, -i ID_FILE
-                            Analyze the ids contained in ID_FILE rather than the
-                            entire database.
-    ```
+optional arguments:
+  -h, --help            show this help message and exit
+  --json JSON_OUT, -j JSON_OUT
+                        Output a JSON result file in addition the the default
+                        csv file.
+  --id-file ID_FILE, -i ID_FILE
+                        Analyze the ids contained in ID_FILE rather than the
+                        entire database.
+```
 
 ##### `identify.py`
-	
-	Tool for identifying documents in a MarcSQLite database via metadata features and keywords.
 
-    Usage:
-    ```
-    python identify.py [-h] MARCDB OUTFILE TERM [TERM ...]
+Tool for identifying documents in a MarcSQLite database via metadata features and keywords.
 
-    A quick and dirty script for searching for keywords in a HathiTrust MARC
-    database.
+Usage:
+```
+python identify.py [-h] MARCDB OUTFILE TERM [TERM ...]
 
-    positional arguments:
-      MARCDB      A HathiTrust MarcSQLite database file from which to retrieve
-                  records.
-      OUTFILE     File to write output to.
-      TERM        Search keywords.
+A quick and dirty script for searching for keywords in a HathiTrust MARC
+database.
 
-    optional arguments:
-      -h, --help  show this help message and exit
-    ```
+positional arguments:
+  MARCDB      A HathiTrust MarcSQLite database file from which to retrieve
+              records.
+  OUTFILE     File to write output to.
+  TERM        Search keywords.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
 
 
 ##### `collate.py` (\*Py3*)
-	
-	A command line wrapper around Ted Underwood's document collation package.
+
+A command line wrapper around Ted Underwood's document collation package.
 
 ##### `ocreval.py` (\*Py3*)
-	
-	Command line version of Ted Underwood's ocrevaluation package.
+
+Command line version of Ted Underwood's ocrevaluation package.
 
 
 #### Dependencies:
