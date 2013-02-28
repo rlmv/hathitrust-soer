@@ -1,12 +1,12 @@
 from __future__ import absolute_import
+import sys
 
 import os
 
-try:
-    import ptree
-except ValueError:
-    # python3 issues...
+if sys.version_info[0] == 3:
     from .ptree import ptree
+else:
+    import ptree
 
 
 class PairTreePathFinder(object):
