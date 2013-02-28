@@ -1,9 +1,9 @@
 
 
-###Modules:
+### Modules:
 
 
-* ##### getdocs.py
+* ##### `getdocs.py`
 
 	An example tool built using the [hathitrust-api] Data API to retrieve HathiTrust aggregate resources. It is limited to retrieving public domain documents, and requires an OAuth keyset to use--see `oauth_keys.py.template` for information about how to set up the `oauth_keys.py` file.
 	
@@ -32,24 +32,29 @@
 	A more useful example using the [hathitrust-api][ht api] Solr API, `solrquery.py` is a command line interface with the HTRC's Solr index, allowing document searches and MARC retrieval.
 	
 	Usage:
-		
-		python solrquery.py [-h] [-f [FIELD [FIELD ...]]] [-o OUTFILE] [-n] [-i]
-                    	  	[-m MARCFILE]
-                          	QUERY
+	```	
+	python solrquery.py [-h] [-f [FIELD [FIELD ...]]] [-o OUTFILE] [-n] [-i]
+                        [-m MARCFILE]
+                        QUERY
 
-		positional arguments:
- 		QUERY          		a Solr query string
+    A command line tool for the HTRC Solr Proxy.
 
-		optional arguments:
- 		-h, --help           show this help message and exit
-  		-f [FIELD [FIELD ...]], --fields [FIELD [FIELD ...]]
-                        	 fields to include with the results
-  		-o OUTFILE, --outfile OUTFILE
-                        	 optional output file
- 		-n, --numfound       number of results matching QUERY
-  		-i, --ids            return documents identifiers only
-  		-m MARCFILE, --marc MARCFILE
-                        	 retrieve MARC records and write to zip file
+    positional arguments:
+      QUERY                 A Solr query string. See http://wiki.htrc.illinois.edu
+                            /display/COM/Solr+Proxy+API+User+Guide for details.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -f [FIELD [FIELD ...]], --fields [FIELD [FIELD ...]]
+                            A subset of index fields to include with the results.
+      -o OUTFILE, --outfile OUTFILE
+                            Use --outfile to specify and optional output file.
+      -n, --numfound        Print the number of results matching QUERY.
+      -i, --ids             Return a stream of documents identifiers only.
+      -m MARCFILE, --marc MARCFILE
+                            Retrieve MARC records for all documents matching QUERY
+                            and write a zip archive to MARCFILE.
+    ```
 	
 	Examples:
 	
@@ -91,7 +96,7 @@ Code in this package depends on these third party libraries:
 They should all be installable with a `pip <dependency>` command. There may still be an issue with the requests-oauthlib version in PyPI. If you have issues using `hathitrust_api.DataAPI`, install it from the [source][requests-oauthlib].
 
 ####Submodules: 
-Due to issues involving Python 3, and needing to hack into some existing code, I've included several packages as submodules to ease the pain of setting up a bunch of dependencies. If you do a `git clone`, these will all be included without any extra work:
+Due to issues involving Python 3, and needing to hack into some existing code, I've included several packages as submodules to ease the pain of setting up a bunch of dependencies. If you do a `git clone`, these will all be included:
 
 * [hathitrust-api]
 * [remove-running-headers]
