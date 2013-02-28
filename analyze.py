@@ -48,19 +48,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("MAPPING", 
         choices=['years', 'subjects'], 
-        help="type of mapping to perform")
+        help="Type of accumulation to perform. "
+        "'years' tallies the publication years of all documents. "
+        "'subjects' accumulates the subjects of the documents.")
     parser.add_argument("DATABASE", 
-        help="MarcSQLite record database from which to pull records")
+        help="MarcSQLite record database from which to pull records.")
     parser.add_argument("CSV_OUT", 
-        help="file to which to write CSV output")
+        help="File for writing CSV output.")
     parser.add_argument("--json", "-j", 
         metavar="JSON_OUT",
         dest="JSON_OUT",
-        help="output a JSON result file in addition the the default csv file")
+        help="Output a JSON result file in addition the the default csv file.")
     parser.add_argument("--id-file", "-i", 
         metavar="ID_FILE", 
         dest="ID_FILE", 
-        help="map over the ids contained in ID_FILE, rather than the entire database")
+        help="Map over the ids contained in ID_FILE rather than the entire database.")
 
     args = parser.parse_args()
 
