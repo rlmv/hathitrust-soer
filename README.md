@@ -76,6 +76,24 @@
 	
 	Tool for identifying documents in a MarcSQLite database via metadata features and keywords.
 
+    Usage:
+    ```
+    python identify.py [-h] MARCDB OUTFILE TERM [TERM ...]
+
+    A quick and dirty script for searching for keywords in a HathiTrust MARC
+    database.
+
+    positional arguments:
+      MARCDB      A HathiTrust MarcSQLite database file from which to retrieve
+                  records.
+      OUTFILE     File to write output to.
+      TERM        Search keywords.
+
+    optional arguments:
+      -h, --help  show this help message and exit
+    ```
+
+
 * ##### collate.py (\*Py3*)
 	
 	A command line wrapper around Ted Underwood's document collation package.

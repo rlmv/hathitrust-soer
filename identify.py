@@ -20,14 +20,16 @@ def has_reference(record):
     
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description="A quick and dirty script for "
+            "searching for keywords in a HathiTrust MARC database.")
     parser.add_argument('MARCDB',
-                        help='MarcSQLite database from which to retrieve records.')
+                        help='A HathiTrust MarcSQLite database file from '
+                        'which to retrieve records.')
     parser.add_argument('OUTFILE', 
                         help='File to write output to.')
     parser.add_argument('TERM',
                         nargs='+',
-                        help='Terms signalling positive identification.')
+                        help='Search keywords.')
     
 
     args = parser.parse_args()
