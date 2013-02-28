@@ -192,10 +192,11 @@ Class for storing HathiTrust MARC records in a SQLite database schema.
 ###### marc.parse_xml_to_SQLite
 Main function for parsing a HathiTrust MARC record to a MarcSQLite accessible database.
 ###### marc.normalize_year
+Function to normalize a MARC year field (accessible through pymarc.Record.pubyear()).
 ###### marc.normalize_subject
-###### marc.map_publication_years
-###### marc.map_subjects
+Function to normalize formatting of a MARC subject field.
 ###### pairtree.PairTreePathFinder
+Class for navigating the HathiTrust pairtree collection structure. 
 
 
 #### Dependencies:
