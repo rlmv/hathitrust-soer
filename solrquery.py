@@ -21,29 +21,33 @@ def main(args):
     
     parser.add_argument('querystring',
                         metavar='QUERY',
-                        help='a Solr query string')
+                        help='A Solr query string. '
+                        'See http://wiki.htrc.illinois.edu/display/COM/Solr+Proxy+API+User+Guide '
+                        'for details.')
     
     parser.add_argument('-f', '--fields',
                         metavar='FIELD',
                         nargs='*',
-                        help='fields to include with the results')
+                        help='A subset of index fields to include with the results.')
     
     parser.add_argument('-o', '--outfile',
                         default=sys.stdout,
                         type=argparse.FileType('w'),
-                        help='optional output file')
+                        help='Use --outfile to specify and optional output file.')
     
     parser.add_argument('-n', '--numfound',
                         action='store_true',
-                        help='number of results matching QUERY')
+                        help='Print the number of results matching QUERY.')
     
     parser.add_argument('-i', '--ids',
                         action='store_true',
-                        help='return documents identifiers only')
+                        help='Return a stream of documents identifiers only.')
     
     parser.add_argument('-m', '--marc',
                         type=lambda x: ZipFile(x, 'w'),
-                        metavar='MARCFILE', help='retrieve MARC records and write to zip file')
+                        metavar='MARCFILE', 
+                        help='Retrieve MARC records for all documents matching '
+                        'QUERY and write a zip archive to MARCFILE.')
     
     # arguments to implement:   
     #                           max - specify a maximum number of results to retrieve.
