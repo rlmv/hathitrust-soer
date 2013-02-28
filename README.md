@@ -68,7 +68,7 @@
 
 	Tool for converting a large HathiTrust XML file to a managable SQLite database format, accessible through the class `marc.MarcSQLite`.
 
-* ##### map.py
+* ##### analyze.py
 
 	Various analysis functions over the records in a MarcSQLite database.
 

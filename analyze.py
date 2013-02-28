@@ -46,9 +46,9 @@ def map_onto_records(func, db, csv_fname, json_fname=None,
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("MAPPING", 
+    parser.add_argument("ANALYSIS", 
         choices=['years', 'subjects'], 
-        help="Type of accumulation to perform. "
+        help="Type of analysis to perform/information to extract. "
         "'years' tallies the publication years of all documents. "
         "'subjects' accumulates the subjects of the documents.")
     parser.add_argument("DATABASE", 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("--id-file", "-i", 
         metavar="ID_FILE", 
         dest="ID_FILE", 
-        help="Map over the ids contained in ID_FILE rather than the entire database.")
+        help="Analyze the ids contained in ID_FILE rather than the entire database.")
 
     args = parser.parse_args()
 
