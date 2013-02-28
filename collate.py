@@ -16,17 +16,17 @@ if __name__ == "__main__":
         around Ted Underwood's collation package.")
 
     parser.add_argument('COLLECTION', 
-                        help='root directory of the HathiTrust collection')
+                        help='Specifies the root directory of a HathiTrust collection.')
     parser.add_argument('ID_FILE', 
                         nargs='?', 
                         default=False, 
-                        help='file of HathiTrust ids to collate; defaults to the entire collection')
+                        help='File of HathiTrust ids to collate; defaults to the entire collection.')
     parser.add_argument('--rewrite-existing',
                         action='store_true',  
                         help='Overwrite existing collated documents.')
     parser.add_argument('--no-divs', 
                         action='store_true', 
-                        help='If present, do not write page or header divisions to the collation.')
+                        help='If specified, do not write page or header divisions to the collation.')
     parser.add_argument('--skip', 
                         type=int,
                         default=0,
