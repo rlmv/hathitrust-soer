@@ -1,7 +1,9 @@
+## About:
+This repository is a collection of software and tools put together over the course of the NeSI eResearch HathiTrust pilot project. They are provided as is - the command line tools are examples of working with HathiTrust data, and can hopefully reused in part or in full for projects down the road.
+
 
 
 ## Command line tools:
-
 
 ##### `getdocs.py`
 
@@ -210,7 +212,7 @@ Code in this package depends on the following third party libraries:
 They should all be installable with a `pip <dependency>` command. There may still be an issue with the requests-oauthlib version in PyPI. If you have issues using `hathitrust_api.DataAPI`, install it from the [source][requests-oauthlib].
 
 ####Submodules: 
-Due to issues involving Python 3, and needing to hack into some existing code, I've included several packages as submodules to ease the pain of setting up a bunch of dependencies. If you do a `git clone`, these will all be included:
+Because I needed to hack some Python 2 code to make it compatible with Python 3,  I've included several packages as submodules to ease the pain of setting up a bunch of dependencies. If you do a `git clone`, these will all be included:
 
 * [hathitrust-api]
 * [remove-running-headers]
